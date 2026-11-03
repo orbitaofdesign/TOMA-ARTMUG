@@ -90,6 +90,9 @@ button{cursor:pointer}
 .it.sel{border-color:var(--red);box-shadow:0 0 0 3px var(--pink2)}
 .it.ghost{opacity:.35}
 .it.slot{cursor:default}
+.it .th.crop{display:flex;align-items:center;justify-content:center}
+.th.crop>div{position:relative;width:162px;height:150px;overflow:hidden}
+.th.crop img{position:absolute;width:598px;left:-223px;top:-91px;max-width:none}
 .it .th{display:block;width:100%;height:150px;object-fit:contain;background:#f6f3f3;pointer-events:none}
 .it .no{position:absolute;left:8px;top:8px;min-width:24px;height:24px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:700;line-height:24px;text-align:center}
 .it .nw{position:absolute;right:8px;top:8px;height:20px;padding:0 6px;border-radius:999px;background:#ffe066;color:#5a4300;font-size:10px;font-weight:700;line-height:20px}
@@ -301,14 +304,14 @@ $('lk').addEventListener('change',refreshPreview);
 var moveSel=null; // {g,i}
 function renderPf(){
   var html='';
-  if(SLOTS.length){
-    html+='<div class="box"><div class="boxh"><h3>본문 이미지</h3><span class="cnt">'+SLOTS.length+'개</span><span class="sp"></span><span class="hint">'+'교체한 이미지는 가로 800px 이하로 자동으로 줄여요</span></div><div class="items">';
-    SLOTS.forEach(function(sl){var v=state.imgs[sl.id];
-      html+='<div class="it slot" data-slot="'+esc(sl.id)+'"><img class="th" src="'+esc(v?srcUrl(v.src):sl.def)+'" referrerpolicy="no-referrer" alt="">'+(v&&pending[v.src]?'<span class="nw">새 이미지</span>':'')+
-        '<div class="meta">'+esc(sl.name)+(v?' · 바꾼 이미지':(sl.id==='logo'?' · 기본 (원래 이미지에서 로고 부분만 잘라 보여 줘요)':' · 기본'))+'</div>'+
-        '<div class="acts"><button data-sa="rep">교체</button>'+(v?'<button data-sa="reset">기본으로</button>':'')+'</div></div>';});
-    html+='</div></div>';
-  }
+  SLOTS.forEach(function(sl){var v=state.imgs[sl.id],thumb;
+    if(v)thumb='<img class="th" src="'+esc(srcUrl(v.src))+'" referrerpolicy="no-referrer" alt="">';
+    else if(sl.id==='logo')thumb='<div class="th crop"><div><img src="'+esc(sl.def)+'" referrerpolicy="no-referrer" alt=""></div></div>';
+    else thumb='<img class="th" src="'+esc(sl.def)+'" referrerpolicy="no-referrer" alt="">';
+    html+='<div class="box"><div class="boxh"><h3>'+esc(sl.name)+'</h3><span class="sp"></span><span class="hint">교체한 이미지는 가로 800px 이하로 자동으로 줄여요</span></div><div class="items">'+
+      '<div class="it slot" data-slot="'+esc(sl.id)+'">'+thumb+(v&&pending[v.src]?'<span class="nw">새 이미지</span>':'')+
+      '<div class="meta">'+(v?'바꾼 이미지':'기본 이미지')+'</div>'+
+      '<div class="acts"><button data-sa="rep">교체</button>'+(v?'<button data-sa="reset">기본으로</button>':'')+'</div></div></div></div>';});
   GROUPS.forEach(function(g){
     var L=state.pf[g.id];
     html+='<div class="box" data-g="'+g.id+'"><div class="boxh"><h3>'+esc(g.name)+'</h3><span class="cnt">'+L.length+'장</span><span class="sp"></span>'+
