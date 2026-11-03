@@ -89,6 +89,7 @@ button{cursor:pointer}
 .it:hover{border-color:var(--pink2)}
 .it.sel{border-color:var(--red);box-shadow:0 0 0 3px var(--pink2)}
 .it.ghost{opacity:.35}
+.it.slot{cursor:default}
 .it .th{display:block;width:100%;height:150px;object-fit:contain;background:#f6f3f3;pointer-events:none}
 .it .no{position:absolute;left:8px;top:8px;min-width:24px;height:24px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:700;line-height:24px;text-align:center}
 .it .nw{position:absolute;right:8px;top:8px;height:20px;padding:0 6px;border-radius:999px;background:#ffe066;color:#5a4300;font-size:10px;font-weight:700;line-height:20px}
@@ -141,7 +142,7 @@ button{cursor:pointer}
 <div class="wrap">
   <nav class="nav">
     <button class="on" data-v="text">페이지 문구</button>
-    <button data-v="pf">포트폴리오</button>
+    <button data-v="pf">이미지</button>
     <div class="help">고친 내용은 <b>사이트에 반영</b>을 눌러야 실제 페이지에 적용돼요. 반영 후 1~2분 걸려요.</div>
   </nav>
   <main class="main">
@@ -162,10 +163,10 @@ button{cursor:pointer}
       <div class="pfw" id="pfw">
         <div class="movebar"><b>옮기기:</b><span>옮길 자리의 이미지를 누르면 그 앞에 들어가요. 칸 맨 끝은 '여기 맨 끝에 넣기'를 눌러요.</span><span class="sp"></span><button class="btn" id="moveX">취소 (Esc)</button></div>
         <div class="pfbar">
-          <h2>포트폴리오</h2>
-          <span class="hint">이미지를 끌어서 순서·칸을 바꾸거나, '옮기기'를 누른 뒤 옮길 자리를 눌러요. 새 이미지는 자동으로 크기를 줄이고 압축해요.</span>
+          <h2>이미지</h2>
+          <span class="hint">본문 이미지는 '교체'로 바꿔요. 아래 칸 이미지는 끌어서 순서·칸을 바꾸거나, '옮기기'를 누른 뒤 옮길 자리를 눌러요. 새 이미지는 자동으로 크기를 줄이고 압축해요.</span>
           <span class="sp"></span>
-          <button class="btn warn" id="clrAll">포트폴리오 전체 삭제</button>
+          <button class="btn warn" id="clrAll">칸 이미지 전체 삭제</button>
         </div>
         <div id="groups"></div>
       </div>
@@ -174,6 +175,7 @@ button{cursor:pointer}
 </div>
 <input type="file" id="fImg" accept="image/*" multiple hidden>
 <input type="file" id="fRep" accept="image/*" hidden>
+<input type="file" id="fSlot" accept="image/*" hidden>
 <input type="file" id="fBak" accept=".json,application/json" hidden>
 <div class="ov" id="ov"><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
 <div class="busy" id="busy">작업 중…</div>
@@ -187,7 +189,7 @@ try{var sc=JSON.parse(localStorage.getItem('toma.cfg')||'null');if(sc)Object.key
 var TOKEN='';try{TOKEN=localStorage.getItem('toma.token')||'';}catch(e){}
 var PAGES=[{id:'mini-fan-character',name:'미니·팬 캐릭터 디자인'}],PAGE=null;
 var SITE=location.href.replace(/[^/]*([?#].*)?$/,'');
-var GROUPS=[];
+var GROUPS=[],SLOTS=[];
 var SEC={notice:'공지사항',guide:'작업 관련 안내',process:'작업 순서',use:'사용 범위',form:'신청 양식',collab:'협업 작가 안내',sample:'샘플',foot:'맨 아래'};
 var LABEL={'notice.1':'제목','notice.2':'부제','notice.3':'카드 1','notice.4':'카드 2','notice.5':'카드 3','notice.6':'카드 4',
  'guide.1':'제목','guide.2':'카드 1','guide.3':'카드 2','guide.4':'카드 3',
@@ -210,7 +212,8 @@ function setStatus(kind,msg){var s=$('status');s.className='status '+(kind||'');
 function markDirty(){dirty=true;setStatus('dirty','반영 안 된 변경 사항이 있어요');}
 window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue='';}});
 function normalize(c){
-  c=c||{};var o={texts:{},links:{collab:''},pf:null};
+  c=c||{};var o={texts:{},links:{collab:''},pf:null,imgs:{}};
+  if(c.imgs&&typeof c.imgs==='object')SLOTS.forEach(function(sl){var v=c.imgs[sl.id];if(v&&v.src)o.imgs[sl.id]={src:v.src,w:v.w||0,h:v.h||0};});
   if(c.texts&&typeof c.texts==='object')Object.keys(c.texts).forEach(function(k){if(typeof c.texts[k]==='string')o.texts[k]=c.texts[k];});
   if(c.links&&typeof c.links.collab==='string')o.links.collab=c.links.collab;
   var P=c.pf||DEF.pf;o.pf={};
@@ -223,8 +226,8 @@ function txt(k){return Object.prototype.hasOwnProperty.call(state.texts,k)?state
 function link(){return state.links.collab||DEF.links.collab;}
 function srcUrl(p){return pending[p]||cache[p]||p;}
 function srcAbs(p){return pending[p]||cache[p]||absUrl(p);}
-function previewState(){var c=clone(state);GROUPS.forEach(function(g){c.pf[g.id]=c.pf[g.id].map(function(x){return {src:srcAbs(x.src),orig:srcAbs(x.orig),w:x.w,h:x.h};});});c.links.collab=link();return c;}
-function contentForSave(){var c={v:1,rev:Date.now(),texts:{},links:{},pf:clone(state.pf)};
+function previewState(){var c=clone(state);Object.keys(c.imgs).forEach(function(k){c.imgs[k].src=srcAbs(c.imgs[k].src);});GROUPS.forEach(function(g){c.pf[g.id]=c.pf[g.id].map(function(x){return {src:srcAbs(x.src),orig:srcAbs(x.orig),w:x.w,h:x.h};});});c.links.collab=link();return c;}
+function contentForSave(){var c={v:1,rev:Date.now(),texts:{},links:{},pf:clone(state.pf),imgs:clone(state.imgs)};
   Object.keys(state.texts).forEach(function(k){if(state.texts[k]!==DEF.texts[k])c.texts[k]=state.texts[k];});
   if(state.links.collab&&state.links.collab!==DEF.links.collab)c.links.collab=state.links.collab;return c;}
 
@@ -248,6 +251,7 @@ pv.addEventListener('load',function(){
 function init(w){
   pdoc=w.document;
   if(!DEF){DEF=w.TOMA.defaults();
+    SLOTS=DEF.slots||[];
     GROUPS=(DEF.groups||[]).map(function(g){return {id:g.id,name:g.name,dir:g.id};});
     if(!GROUPS.length&&DEF.pf)GROUPS=Object.keys(DEF.pf).map(function(k){return {id:k,name:k,dir:k};});
     var hc=DEF.hasCollab!==false;$('lkH').style.display=hc?'':'none';$('lkB').style.display=hc?'':'none';
@@ -297,6 +301,14 @@ $('lk').addEventListener('change',refreshPreview);
 var moveSel=null; // {g,i}
 function renderPf(){
   var html='';
+  if(SLOTS.length){
+    html+='<div class="box"><div class="boxh"><h3>본문 이미지</h3><span class="cnt">'+SLOTS.length+'개</span><span class="sp"></span><span class="hint">'+'교체한 이미지는 가로 800px 이하로 자동으로 줄여요</span></div><div class="items">';
+    SLOTS.forEach(function(sl){var v=state.imgs[sl.id];
+      html+='<div class="it slot" data-slot="'+esc(sl.id)+'"><img class="th" src="'+esc(v?srcUrl(v.src):sl.def)+'" referrerpolicy="no-referrer" alt="">'+(v&&pending[v.src]?'<span class="nw">새 이미지</span>':'')+
+        '<div class="meta">'+esc(sl.name)+(v?' · 바꾼 이미지':(sl.id==='logo'?' · 기본 (원래 이미지에서 로고 부분만 잘라 보여 줘요)':' · 기본'))+'</div>'+
+        '<div class="acts"><button data-sa="rep">교체</button>'+(v?'<button data-sa="reset">기본으로</button>':'')+'</div></div>';});
+    html+='</div></div>';
+  }
   GROUPS.forEach(function(g){
     var L=state.pf[g.id];
     html+='<div class="box" data-g="'+g.id+'"><div class="boxh"><h3>'+esc(g.name)+'</h3><span class="cnt">'+L.length+'장</span><span class="sp"></span>'+
@@ -325,8 +337,14 @@ function moveItem(fg,fi,tg,ti){
   state.pf[tg].splice(Math.max(0,Math.min(ti,state.pf[tg].length)),0,it);
 }
 var addTo=null,repAt=null;
+var slotAt=null;
 $('groups').addEventListener('click',function(e){
   var t=e.target;
+  var sa=t.getAttribute('data-sa');if(sa){var sid=t.closest('.it').getAttribute('data-slot');
+    if(sa==='rep'){slotAt=sid;$('fSlot').value='';$('fSlot').click();}
+    else{delete state.imgs[sid];changedPf();toast('기본 이미지로 되돌렸어요');}
+    return;}
+  if(t.closest('.it.slot'))return;
   var add=t.getAttribute('data-add');if(add){addTo=add;$('fImg').value='';$('fImg').click();return;}
   var clr=t.getAttribute('data-clr');if(clr){if(!state.pf[clr].length)return;var gn=GROUPS.filter(function(g){return g.id===clr;})[0].name;
     ask('\''+gn+'\' 전체 삭제','이 칸의 이미지 '+state.pf[clr].length+'장을 모두 지울까요? 사이트에 반영하기 전까지는 \'예전 파일 불러오기\'로 되돌릴 수 있어요.','전체 삭제',function(){state.pf[clr]=[];moveSel=null;changedPf();toast('삭제했어요');},true);return;}
@@ -349,8 +367,8 @@ $('clrAll').onclick=function(){var n=GROUPS.reduce(function(s,g){return s+state.
 var drag=null;
 $('groups').addEventListener('dragstart',function(e){var b=e.target.closest&&e.target.closest('.it');if(!b)return;drag={g:b.getAttribute('data-g'),i:+b.getAttribute('data-i')};b.classList.add('ghost');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain','x');}catch(x){}});
 $('groups').addEventListener('dragend',function(){drag=null;[].forEach.call(document.querySelectorAll('.ghost,.box.drop'),function(x){x.classList.remove('ghost','drop');});});
-$('groups').addEventListener('dragover',function(e){if(!drag&&!(e.dataTransfer&&[].indexOf.call(e.dataTransfer.types||[],'Files')>-1))return;e.preventDefault();var bx=e.target.closest&&e.target.closest('.box');[].forEach.call(document.querySelectorAll('.box.drop'),function(x){if(x!==bx)x.classList.remove('drop');});if(bx)bx.classList.add('drop');});
-$('groups').addEventListener('drop',function(e){e.preventDefault();var bx=e.target.closest&&e.target.closest('.box');[].forEach.call(document.querySelectorAll('.box.drop'),function(x){x.classList.remove('drop');});if(!bx)return;var tg=bx.getAttribute('data-g');
+$('groups').addEventListener('dragover',function(e){if(!drag&&!(e.dataTransfer&&[].indexOf.call(e.dataTransfer.types||[],'Files')>-1))return;e.preventDefault();var bx=e.target.closest&&e.target.closest('.box[data-g]');[].forEach.call(document.querySelectorAll('.box.drop'),function(x){if(x!==bx)x.classList.remove('drop');});if(bx)bx.classList.add('drop');});
+$('groups').addEventListener('drop',function(e){e.preventDefault();var bx=e.target.closest&&e.target.closest('.box[data-g]');[].forEach.call(document.querySelectorAll('.box.drop'),function(x){x.classList.remove('drop');});if(!bx)return;var tg=bx.getAttribute('data-g');
   if(!drag){var fs=[].slice.call(e.dataTransfer.files||[]).filter(function(f){return /^image\//.test(f.type);});if(fs.length)addFiles(tg,fs);return;}
   var it=e.target.closest('.it'),ti=state.pf[tg].length;
   if(it){var r=it.getBoundingClientRect();ti=+it.getAttribute('data-i')+((e.clientX-r.left)>r.width/2?1:0);}
@@ -362,11 +380,11 @@ function draw(im,maxW,maxSide){var w=im.naturalWidth,h=im.naturalHeight,s=Math.m
 function toData(c,type,q){var d=c.toDataURL(type,q);if(type==='image/webp'&&d.indexOf('data:image/webp')!==0)d=c.toDataURL('image/jpeg',q);return d;}
 function fileData(f){return new Promise(function(res){var r=new FileReader();r.onload=function(){res(r.result);};r.readAsDataURL(f);});}
 function stamp(){var d=new Date();function p(n){return (n<10?'0':'')+n;}return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds())+'-'+(++uid)+Math.random().toString(36).slice(2,5);}
-function processFile(file,dir){
+function processFile(file,dir,maxW){
   return readImg(file).then(function(im){
     var base='portfolio/'+PAGE+'/'+dir+'/'+stamp();
     // 페이지용: 가로 1600px 이하(세로 최대 12000px), webp 압축
-    var pc=draw(im,1600,12000),pd=toData(pc,'image/webp',0.88),pext=pd.indexOf('data:image/webp')===0?'webp':'jpg';
+    var pc=draw(im,maxW||1600,12000),pd=toData(pc,'image/webp',0.88),pext=pd.indexOf('data:image/webp')===0?'webp':'jpg';
     var page=base+'.'+pext;pending[page]=pd;
     // 원본: 3MB 넘거나 긴 변 4096px 넘으면 줄여서 jpg, 아니면 그대로
     var big=file.size>3*1024*1024||Math.max(im.naturalWidth,im.naturalHeight)>4096;
@@ -384,6 +402,11 @@ $('fImg').onchange=function(){var fs=[].slice.call(this.files||[]);if(fs.length&
 $('fRep').onchange=function(){var f=this.files&&this.files[0];if(!f||!repAt)return;var at=repAt,dir=GROUPS.filter(function(x){return x.id===at.g;})[0].dir;busy(true,'이미지 줄이는 중…');
   processFile(f,dir).then(function(it){state.pf[at.g][at.i]=it;busy(false);changedPf();toast('교체했어요');}).catch(function(e){busy(false);toast(e.message,4000);});};
 
+$('fSlot').onchange=function(){var f=this.files&&this.files[0];if(!f||!slotAt)return;var sid=slotAt;busy(true,'이미지 줄이는 중…');
+  processFile(f,'body',800).then(function(it){state.imgs[sid]={src:it.src,w:it.w,h:it.h};delete pending[it.orig];busy(false);changedPf();toast('교체했어요');}).catch(function(e){busy(false);toast(e.message,4000);});};
+// 본문 이미지 칸은 끌어서 옮기기 대상이 아님
+$('groups').addEventListener('dragstart',function(e){if(e.target.closest&&e.target.closest('.it.slot')){e.preventDefault();e.stopImmediatePropagation();}},true);
+
 /* ===== 대화상자 ===== */
 function dlg(html){$('dlg').innerHTML=html;$('ov').classList.add('on');}
 function close(){$('ov').classList.remove('on');}
@@ -392,7 +415,7 @@ function ask(title,msg,okLabel,ok,danger){dlg('<h3>'+esc(title)+'</h3><p>'+esc(m
 
 /* ===== 임시 저장 · 백업 파일 · 예전 파일 불러오기 ===== */
 function draftKey(){return 'toma.draft.'+PAGE;}
-function usedPending(){var u={};GROUPS.forEach(function(g){state.pf[g.id].forEach(function(x){[x.src,x.orig].forEach(function(p){if(pending[p])u[p]=pending[p];});});});return u;}
+function usedPending(){var u={};Object.keys(state.imgs).forEach(function(k){var p=state.imgs[k].src;if(pending[p])u[p]=pending[p];});GROUPS.forEach(function(g){state.pf[g.id].forEach(function(x){[x.src,x.orig].forEach(function(p){if(pending[p])u[p]=pending[p];});});});return u;}
 $('bDraft').onclick=function(){
   var d={kind:'toma-draft',savedAt:Date.now(),content:contentForSave(),pending:usedPending()};
   try{localStorage.setItem(draftKey(),JSON.stringify(d));toast('이 브라우저에 임시 저장했어요');}

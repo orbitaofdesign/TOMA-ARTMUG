@@ -42,6 +42,7 @@ section,.logo-box{position:relative;z-index:1}
 .logo-box{padding:64px 0 24px;text-align:center}
 .logo{display:inline-block;width:240px;height:222px;overflow:hidden;position:relative;animation:bob 2.6s ease-in-out infinite;}
 .logo img{position:absolute;width:885px;left:-330px;top:-135px;display:block;user-select:none;-webkit-user-drag:none}
+.logo.custom img{position:static;width:100%;height:100%;object-fit:contain}
 .logo:hover{animation:boing .7s ease}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
 @keyframes boing{0%{transform:scale(1)}30%{transform:scale(1.15,.85)}50%{transform:scale(.9,1.12)}70%{transform:scale(1.05,.95)}100%{transform:scale(1)}}
@@ -179,7 +180,7 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
     <svg viewBox="0 0 1180 60" preserveAspectRatio="none"><path d="M0 0 Q590 70 1180 0 V60 H0Z" fill="#fff"/><path d="M0 8 Q590 76 1180 8" fill="none" stroke="#e46868" stroke-width="4"/></svg>
   </div>
   <div class="logo-box">
-    <div class="logo" title="토마짜 / Tomachan"><img src="https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17923348980_Re.jpg" alt="토마짜 로고" referrerpolicy="no-referrer" draggable="false"></div>
+    <div class="logo" title="토마짜 / Tomachan" data-img="logo" data-name="맨 위 로고"><img src="https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17923348980_Re.jpg" alt="토마짜 로고" referrerpolicy="no-referrer" draggable="false"></div>
   </div>
 
   <!-- 공지사항 -->
@@ -266,7 +267,7 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
       <h2 data-k="collab.1" data-label="제목">협업 작가 안내</h2>
     </div>
     <a class="collab rise" id="collabLink" href="https://artmug.kr/index.php?channel=view&amp;uid=33431" target="_blank" rel="noopener">
-      <img src="../orbita-logo.webp" width="132" height="132" alt="디자인·오르비타 로고" draggable="false">
+      <img data-img="collabLogo" data-name="협업 배너 로고" src="../orbita-logo.webp" width="132" height="132" alt="디자인·오르비타 로고" draggable="false">
       <span class="txt">
         <span class="who" data-k="collab.2" data-label="작가 이름">디자인·오르비타</span>
         <span class="desc" data-k="collab.3" data-label="안내 문구">오르비타 작가님께 데뷔 패키지 A 신청 후<br>미니, 팬 캐릭터 디자인 신청 시 <b>15% 할인</b>해 드려요.</span>
@@ -298,7 +299,9 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   var EDIT=window.TOMA_EDIT;
   var DEF_PF={"sample": [{"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17930608230_Re.jpg", "w": 1180, "h": 236}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17925245480_Re.jpg", "w": 1180, "h": 337}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17923350190_Re.jpg", "w": 1180, "h": 2364}], "ref": [{"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428521_Re.jpg", "w": 1180, "h": 510}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428532_Re.jpg", "w": 1180, "h": 441}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428533_Re.jpg", "w": 1180, "h": 465}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428534_Re.jpg", "w": 1180, "h": 460}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17851230140_Re.jpg", "w": 1180, "h": 449}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17851230141_Re.jpg", "w": 1180, "h": 456}]};
   var CL=document.getElementById('collabLink'),DEF_LINK=CL?CL.getAttribute('href'):'';
-  var DEF_TEXTS={};
+  var DEF_TEXTS={},DEF_IMGS={};
+  function slotImg(el){return el.tagName==='IMG'?el:el.querySelector('img');}
+  [].forEach.call(document.querySelectorAll('[data-img]'),function(el){var im=slotImg(el);DEF_IMGS[el.getAttribute('data-img')]={raw:im.getAttribute('src'),abs:im.src,name:el.getAttribute('data-name')||''};});
   [].forEach.call(document.querySelectorAll('[data-k]'),function(el){DEF_TEXTS[el.getAttribute('data-k')]=el.innerHTML;});
   var inFrame=window.top!==window, vp=null, started=false;
 
@@ -316,6 +319,9 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
     c=c||{};var T=c.texts||{};
     [].forEach.call(document.querySelectorAll('[data-k]'),function(el){var k=el.getAttribute('data-k');var v=Object.prototype.hasOwnProperty.call(T,k)&&T[k]!=null?T[k]:DEF_TEXTS[k];if(el.innerHTML!==v)el.innerHTML=v;});
     if(CL)CL.setAttribute('href',(c.links&&c.links.collab)||DEF_LINK);
+    var IM=c.imgs||{};
+    [].forEach.call(document.querySelectorAll('[data-img]'),function(el){var k=el.getAttribute('data-img'),im=slotImg(el),v=IM[k]&&IM[k].src;
+      var want=v?u(v):DEF_IMGS[k].raw;if(im.getAttribute('src')!==want)im.setAttribute('src',want);el.classList.toggle('custom',!!v);});
     var P=c.pf||{};
     [].forEach.call(document.querySelectorAll('.gallery[data-g]'),function(box){var g=box.getAttribute('data-g');renderGallery(box,Array.isArray(P[g])?P[g]:DEF_PF[g],box.getAttribute('data-name')||'');});
     [].forEach.call(document.querySelectorAll('[data-hide-empty]'),function(el){var L=Array.isArray(P[el.getAttribute('data-hide-empty')])?P[el.getAttribute('data-hide-empty')]:DEF_PF[el.getAttribute('data-hide-empty')];el.style.display=(L&&L.length)?'':'none';});
@@ -328,9 +334,10 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
     [].forEach.call(document.querySelectorAll('section[id]'),function(sc){var h=sc.querySelector('h2');secs[sc.id]=h?h.textContent.trim():sc.id;});
     secs.foot='맨 아래';
     [].forEach.call(document.querySelectorAll('.gallery[data-g]'),function(g){groups.push({id:g.getAttribute('data-g'),name:g.getAttribute('data-name')||g.getAttribute('data-g')});});
-    return {labels:labels,secs:secs,groups:groups,hasCollab:!!CL};
+    var slots=Object.keys(DEF_IMGS).map(function(k){return {id:k,name:DEF_IMGS[k].name,def:DEF_IMGS[k].abs};});
+    return {labels:labels,secs:secs,groups:groups,slots:slots,hasCollab:!!CL};
   }
-  window.TOMA={apply:apply,defaults:function(){var m=meta();return {texts:JSON.parse(JSON.stringify(DEF_TEXTS)),links:{collab:DEF_LINK},pf:JSON.parse(JSON.stringify(DEF_PF)),labels:m.labels,secs:m.secs,groups:m.groups,hasCollab:m.hasCollab};}};
+  window.TOMA={apply:apply,defaults:function(){var m=meta();return {texts:JSON.parse(JSON.stringify(DEF_TEXTS)),links:{collab:DEF_LINK},pf:JSON.parse(JSON.stringify(DEF_PF)),labels:m.labels,secs:m.secs,groups:m.groups,slots:m.slots,hasCollab:m.hasCollab};}};
 
   // ===== 스크롤 등장 효과 =====
   var io=null;

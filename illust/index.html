@@ -42,6 +42,7 @@ section,.logo-box{position:relative;z-index:1}
 .logo-box{padding:64px 0 24px;text-align:center}
 .logo{display:inline-block;width:240px;height:222px;overflow:hidden;position:relative;animation:bob 2.6s ease-in-out infinite;}
 .logo img{position:absolute;width:885px;left:-330px;top:-135px;display:block;user-select:none;-webkit-user-drag:none}
+.logo.custom img{position:static;width:100%;height:100%;object-fit:contain}
 .logo:hover{animation:boing .7s ease}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
 @keyframes boing{0%{transform:scale(1)}30%{transform:scale(1.15,.85)}50%{transform:scale(.9,1.12)}70%{transform:scale(1.05,.95)}100%{transform:scale(1)}}
@@ -179,7 +180,7 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
     <svg viewBox="0 0 1180 60" preserveAspectRatio="none"><path d="M0 0 Q590 70 1180 0 V60 H0Z" fill="#fff"/><path d="M0 8 Q590 76 1180 8" fill="none" stroke="#e46868" stroke-width="4"/></svg>
   </div>
   <div class="logo-box">
-    <div class="logo" title="토마짜 / Tomachan"><img src="https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17891476650_Re.jpg" alt="토마짜 로고" referrerpolicy="no-referrer" draggable="false"></div>
+    <div class="logo" title="토마짜 / Tomachan" data-img="logo" data-name="맨 위 로고"><img src="https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17891476650_Re.jpg" alt="토마짜 로고" referrerpolicy="no-referrer" draggable="false"></div>
   </div>
 
   <!-- 공지사항 -->
@@ -293,7 +294,9 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   var EDIT=window.TOMA_EDIT;
   var DEF_PF={"confirm": [{"src": "https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17893270520_Re.jpg", "w": 1180, "h": 496}], "part": [{"src": "https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17896748550_Re.jpg", "w": 1180, "h": 1616}], "sample": [{"src": "https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17932833670_Re.jpg", "w": 1180, "h": 1474}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17918721270_Re.jpg", "w": 1180, "h": 1671}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17914868980_Re.jpg", "w": 1180, "h": 931}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17895769600_Re.jpg", "w": 1180, "h": 1579}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17893270350_Re.jpg", "w": 1180, "h": 1497}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17891089590_Re.jpg", "w": 1180, "h": 1196}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/6/goods_61034/17893394180_Re.jpg", "w": 1180, "h": 1509}]};
   var CL=document.getElementById('collabLink'),DEF_LINK=CL?CL.getAttribute('href'):'';
-  var DEF_TEXTS={};
+  var DEF_TEXTS={},DEF_IMGS={};
+  function slotImg(el){return el.tagName==='IMG'?el:el.querySelector('img');}
+  [].forEach.call(document.querySelectorAll('[data-img]'),function(el){var im=slotImg(el);DEF_IMGS[el.getAttribute('data-img')]={raw:im.getAttribute('src'),abs:im.src,name:el.getAttribute('data-name')||''};});
   [].forEach.call(document.querySelectorAll('[data-k]'),function(el){DEF_TEXTS[el.getAttribute('data-k')]=el.innerHTML;});
   var inFrame=window.top!==window, vp=null, started=false;
 
@@ -311,6 +314,9 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
     c=c||{};var T=c.texts||{};
     [].forEach.call(document.querySelectorAll('[data-k]'),function(el){var k=el.getAttribute('data-k');var v=Object.prototype.hasOwnProperty.call(T,k)&&T[k]!=null?T[k]:DEF_TEXTS[k];if(el.innerHTML!==v)el.innerHTML=v;});
     if(CL)CL.setAttribute('href',(c.links&&c.links.collab)||DEF_LINK);
+    var IM=c.imgs||{};
+    [].forEach.call(document.querySelectorAll('[data-img]'),function(el){var k=el.getAttribute('data-img'),im=slotImg(el),v=IM[k]&&IM[k].src;
+      var want=v?u(v):DEF_IMGS[k].raw;if(im.getAttribute('src')!==want)im.setAttribute('src',want);el.classList.toggle('custom',!!v);});
     var P=c.pf||{};
     [].forEach.call(document.querySelectorAll('.gallery[data-g]'),function(box){var g=box.getAttribute('data-g');renderGallery(box,Array.isArray(P[g])?P[g]:DEF_PF[g],box.getAttribute('data-name')||'');});
     [].forEach.call(document.querySelectorAll('[data-hide-empty]'),function(el){var L=Array.isArray(P[el.getAttribute('data-hide-empty')])?P[el.getAttribute('data-hide-empty')]:DEF_PF[el.getAttribute('data-hide-empty')];el.style.display=(L&&L.length)?'':'none';});
@@ -323,9 +329,10 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
     [].forEach.call(document.querySelectorAll('section[id]'),function(sc){var h=sc.querySelector('h2');secs[sc.id]=h?h.textContent.trim():sc.id;});
     secs.foot='맨 아래';
     [].forEach.call(document.querySelectorAll('.gallery[data-g]'),function(g){groups.push({id:g.getAttribute('data-g'),name:g.getAttribute('data-name')||g.getAttribute('data-g')});});
-    return {labels:labels,secs:secs,groups:groups,hasCollab:!!CL};
+    var slots=Object.keys(DEF_IMGS).map(function(k){return {id:k,name:DEF_IMGS[k].name,def:DEF_IMGS[k].abs};});
+    return {labels:labels,secs:secs,groups:groups,slots:slots,hasCollab:!!CL};
   }
-  window.TOMA={apply:apply,defaults:function(){var m=meta();return {texts:JSON.parse(JSON.stringify(DEF_TEXTS)),links:{collab:DEF_LINK},pf:JSON.parse(JSON.stringify(DEF_PF)),labels:m.labels,secs:m.secs,groups:m.groups,hasCollab:m.hasCollab};}};
+  window.TOMA={apply:apply,defaults:function(){var m=meta();return {texts:JSON.parse(JSON.stringify(DEF_TEXTS)),links:{collab:DEF_LINK},pf:JSON.parse(JSON.stringify(DEF_PF)),labels:m.labels,secs:m.secs,groups:m.groups,slots:m.slots,hasCollab:m.hasCollab};}};
 
   // ===== 스크롤 등장 효과 =====
   var io=null;
