@@ -380,18 +380,22 @@ $('groups').addEventListener('drop',function(e){e.preventDefault();var bx=e.targ
 /* ===== 이미지 자동 크기 조절 · 압축 ===== */
 function readImg(file){return new Promise(function(res,rej){var u=URL.createObjectURL(file),im=new Image();im.onload=function(){res(im);};im.onerror=function(){rej(new Error('이미지를 읽을 수 없어요: '+file.name));};im.src=u;});}
 function draw(im,maxW,maxSide){var w=im.naturalWidth,h=im.naturalHeight,s=Math.min(1,maxW/w,maxSide/Math.max(w,h));var c=document.createElement('canvas');c.width=Math.round(w*s);c.height=Math.round(h*s);var x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(im,0,0,c.width,c.height);return c;}
-function toData(c,type,q){var d=c.toDataURL(type,q);if(type==='image/webp'&&d.indexOf('data:image/webp')!==0)d=c.toDataURL('image/jpeg',q);return d;}
+function hasAlpha(c){try{var x=c.getContext('2d'),w=c.width,h=c.height,st=Math.max(1,Math.floor(Math.sqrt(w*h/40000)));var d=x.getImageData(0,0,w,h).data;for(var y=0;y<h;y+=st)for(var i=0;i<w;i+=st){if(d[(y*w+i)*4+3]<255)return true;}
+  for(var e=0;e<w;e++){if(d[e*4+3]<255||d[((h-1)*w+e)*4+3]<255)return true;}return false;}catch(err){return true;}}
+// webp(투명 배경 유지) 우선. 브라우저가 webp를 못 만들면 투명한 이미지는 png, 아니면 jpg
+function toData(c,type,q){var d=c.toDataURL(type,q);if(d.indexOf('data:'+type)!==0||type==='image/jpeg'&&hasAlpha(c))d=hasAlpha(c)?c.toDataURL('image/png'):c.toDataURL('image/jpeg',q);return d;}
+function extOf(d){return d.indexOf('data:image/webp')===0?'webp':d.indexOf('data:image/png')===0?'png':'jpg';}
 function fileData(f){return new Promise(function(res){var r=new FileReader();r.onload=function(){res(r.result);};r.readAsDataURL(f);});}
 function stamp(){var d=new Date();function p(n){return (n<10?'0':'')+n;}return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds())+'-'+(++uid)+Math.random().toString(36).slice(2,5);}
 function processFile(file,dir,maxW){
   return readImg(file).then(function(im){
     var base='portfolio/'+PAGE+'/'+dir+'/'+stamp();
     // 페이지용: 가로 1600px 이하(세로 최대 12000px), webp 압축
-    var pc=draw(im,maxW||1600,12000),pd=toData(pc,'image/webp',0.88),pext=pd.indexOf('data:image/webp')===0?'webp':'jpg';
+    var pc=draw(im,maxW||1600,12000),pd=toData(pc,'image/webp',0.88),pext=extOf(pd);
     var page=base+'.'+pext;pending[page]=pd;
     // 원본: 3MB 넘거나 긴 변 4096px 넘으면 줄여서 jpg, 아니면 그대로
     var big=file.size>3*1024*1024||Math.max(im.naturalWidth,im.naturalHeight)>4096;
-    var op=big?Promise.resolve(toData(draw(im,4096,4096),'image/jpeg',0.9)).then(function(d){return {d:d,ext:'jpg'};}):fileData(file).then(function(d){var ext=(file.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'')||'png';return {d:d,ext:ext};});
+    var op=big?Promise.resolve(toData(draw(im,4096,4096),'image/jpeg',0.9)).then(function(d){return {d:d,ext:extOf(d)};}):fileData(file).then(function(d){var ext=(file.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'')||'png';return {d:d,ext:ext};});
     return op.then(function(o){var orig=base+'_orig.'+o.ext;pending[orig]=o.d;return {src:page,orig:orig,w:pc.width,h:pc.height};});
   });
 }
