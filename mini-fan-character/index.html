@@ -106,6 +106,9 @@ section{padding:72px 24px 0;text-align:center}
 .collab:hover .go path{stroke:#fff}
 .collab .go svg{width:22px;height:22px;display:block}
 
+.intro{font-size:18px;line-height:30px;max-width:760px;margin:0 auto 28px}
+.steps + .gallery{margin-top:36px}
+.gallery.narrow{max-width:480px;margin:36px auto 0}
 /* 샘플 */
 .sub-h{font-weight:800;font-size:28px;line-height:36px;color:var(--red);margin:56px 0 20px;display:inline-block;background:var(--pink);border-radius:999px;padding:6px 26px}
 .gallery{display:flex;flex-direction:column;gap:16px;margin:0 -24px}
@@ -183,14 +186,14 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   <section id="notice">
     <div class="h rise">
       <svg class="sprout" viewBox="0 0 52 32"><path d="M26 32V14M26 14C20 4 10 2 2 6c8 0 16 4 24 8zm0 0c6-10 16-12 24-8-8 0-16 4-24 8zM26 14c-2-6 0-12 0-14 0 2 2 8 0 14z" fill="#4f7d3b" stroke="#4f7d3b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <h2 data-k="notice.1">공지사항</h2>
-      <p class="lead" data-k="notice.2">해당 공지사항을 숙지하지 않아 발생하는 문제는 책임지지 않습니다.</p>
+      <h2 data-k="notice.1" data-label="제목">공지사항</h2>
+      <p class="lead" data-k="notice.2" data-label="부제">해당 공지사항을 숙지하지 않아 발생하는 문제는 책임지지 않습니다.</p>
     </div>
     <div class="cards">
-      <div class="card rise" data-k="notice.3">모든 저작권은 작가 <em>[토마짜 / Tomachan]</em> 에게 있으며,<br>무단 2차 가공, 무단 배포, AI 학습을 <em>금지</em>합니다.</div>
-      <div class="card rise" data-k="notice.4"><em>디자인, 아트 샘플</em>을 타 작가님께<br>자료나 참고용 레퍼런스로 제공하는 것은 <em>불가능</em>합니다.<br>저와 유사한 디자인을 원하신다면, 저에게 맡겨주세요.</div>
-      <div class="card rise" data-k="notice.5">완료된 작업물은 <em>샘플 또는 포트폴리오</em>로 사용될 수 있습니다.<br><em>비공개</em>를 원하실 경우 사전에 협의가 필요합니다.</div>
-      <div class="card rise" data-k="notice.6">버추얼 아바타, 또는 3D 등 <em>기존 캐릭터를 보유</em>하고 계신 경우,<br>반드시 <em>캐릭터 저작권 및 파츠 확인</em> 후 연락 부탁드립니다.</div>
+      <div class="card rise" data-k="notice.3" data-label="카드 1">모든 저작권은 작가 <em>[토마짜 / Tomachan]</em> 에게 있으며,<br>무단 2차 가공, 무단 배포, AI 학습을 <em>금지</em>합니다.</div>
+      <div class="card rise" data-k="notice.4" data-label="카드 2"><em>디자인, 아트 샘플</em>을 타 작가님께<br>자료나 참고용 레퍼런스로 제공하는 것은 <em>불가능</em>합니다.<br>저와 유사한 디자인을 원하신다면, 저에게 맡겨주세요.</div>
+      <div class="card rise" data-k="notice.5" data-label="카드 3">완료된 작업물은 <em>샘플 또는 포트폴리오</em>로 사용될 수 있습니다.<br><em>비공개</em>를 원하실 경우 사전에 협의가 필요합니다.</div>
+      <div class="card rise" data-k="notice.6" data-label="카드 4">버추얼 아바타, 또는 3D 등 <em>기존 캐릭터를 보유</em>하고 계신 경우,<br>반드시 <em>캐릭터 저작권 및 파츠 확인</em> 후 연락 부탁드립니다.</div>
     </div>
   </section>
 
@@ -198,12 +201,12 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   <section id="guide">
     <div class="h rise">
       <svg class="sprout" viewBox="0 0 52 32"><path d="M26 32V14M26 14C20 4 10 2 2 6c8 0 16 4 24 8zm0 0c6-10 16-12 24-8-8 0-16 4-24 8zM26 14c-2-6 0-12 0-14 0 2 2 8 0 14z" fill="#4f7d3b" stroke="#4f7d3b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <h2 data-k="guide.1">작업 관련 안내</h2>
+      <h2 data-k="guide.1" data-label="제목">작업 관련 안내</h2>
     </div>
     <div class="cards">
-      <div class="card rise" data-k="guide.2">반드시 <em>문의 후 주문</em> 부탁드립니다.<br>문의 전 주문은 바로 <em>환불 처리</em> 예정입니다.</div>
-      <div class="card rise" data-k="guide.3">원하시는 방향이 있을 경우,<br>신청서를 최대한 <em>자세하게 작성</em>해 주시면<br>더욱 만족스러운 결과물이 나옵니다.</div>
-      <div class="card rise" data-k="guide.4">기본 작업 사이즈 및 해상도는<br><em>2000 x 2000 px</em> / <em>1200 dpi</em> 입니다.<br>원하시는 사이즈가 있으신 경우 미리 말씀 부탁드립니다.</div>
+      <div class="card rise" data-k="guide.2" data-label="카드 1">반드시 <em>문의 후 주문</em> 부탁드립니다.<br>문의 전 주문은 바로 <em>환불 처리</em> 예정입니다.</div>
+      <div class="card rise" data-k="guide.3" data-label="카드 2">원하시는 방향이 있을 경우,<br>신청서를 최대한 <em>자세하게 작성</em>해 주시면<br>더욱 만족스러운 결과물이 나옵니다.</div>
+      <div class="card rise" data-k="guide.4" data-label="카드 3">기본 작업 사이즈 및 해상도는<br><em>2000 x 2000 px</em> / <em>1200 dpi</em> 입니다.<br>원하시는 사이즈가 있으신 경우 미리 말씀 부탁드립니다.</div>
     </div>
   </section>
 
@@ -211,15 +214,15 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   <section id="process">
     <div class="h rise">
       <svg class="sprout" viewBox="0 0 52 32"><path d="M26 32V14M26 14C20 4 10 2 2 6c8 0 16 4 24 8zm0 0c6-10 16-12 24-8-8 0-16 4-24 8zM26 14c-2-6 0-12 0-14 0 2 2 8 0 14z" fill="#4f7d3b" stroke="#4f7d3b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <h2 data-k="process.1">작업 순서</h2>
+      <h2 data-k="process.1" data-label="제목">작업 순서</h2>
     </div>
     <div class="steps rise">
-      <span class="step" data-k="process.2">문의</span><svg class="arrow" viewBox="0 0 30 16"><path d="M2 8h22M18 2l8 6-8 6" fill="none" stroke="#e46868" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span class="step" data-k="process.3">견적</span><svg class="arrow" viewBox="0 0 30 16"><path d="M2 8h22M18 2l8 6-8 6" fill="none" stroke="#e46868" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span class="step" data-k="process.4">주문 및 결제</span><svg class="arrow" viewBox="0 0 30 16"><path d="M2 8h22M18 2l8 6-8 6" fill="none" stroke="#e46868" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span class="step" data-k="process.5">작업</span><svg class="arrow" viewBox="0 0 30 16"><path d="M2 8h22M18 2l8 6-8 6" fill="none" stroke="#e46868" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span class="step" data-k="process.6">수정</span><svg class="arrow" viewBox="0 0 30 16"><path d="M2 8h22M18 2l8 6-8 6" fill="none" stroke="#e46868" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span class="step" data-k="process.7">작업물 전달</span>
+      <span class="step" data-k="process.2" data-label="단계 1">문의</span><svg class="arrow" viewBox="0 0 30 16"><path d="M2 8h22M18 2l8 6-8 6" fill="none" stroke="#e46868" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="step" data-k="process.3" data-label="단계 2">견적</span><svg class="arrow" viewBox="0 0 30 16"><path d="M2 8h22M18 2l8 6-8 6" fill="none" stroke="#e46868" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="step" data-k="process.4" data-label="단계 3">주문 및 결제</span><svg class="arrow" viewBox="0 0 30 16"><path d="M2 8h22M18 2l8 6-8 6" fill="none" stroke="#e46868" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="step" data-k="process.5" data-label="단계 4">작업</span><svg class="arrow" viewBox="0 0 30 16"><path d="M2 8h22M18 2l8 6-8 6" fill="none" stroke="#e46868" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="step" data-k="process.6" data-label="단계 5">수정</span><svg class="arrow" viewBox="0 0 30 16"><path d="M2 8h22M18 2l8 6-8 6" fill="none" stroke="#e46868" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="step" data-k="process.7" data-label="단계 6">작업물 전달</span>
     </div>
   </section>
 
@@ -227,12 +230,12 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   <section id="use">
     <div class="h rise">
       <svg class="sprout" viewBox="0 0 52 32"><path d="M26 32V14M26 14C20 4 10 2 2 6c8 0 16 4 24 8zm0 0c6-10 16-12 24-8-8 0-16 4-24 8zM26 14c-2-6 0-12 0-14 0 2 2 8 0 14z" fill="#4f7d3b" stroke="#4f7d3b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <h2 data-k="use.1">사용 범위</h2>
+      <h2 data-k="use.1" data-label="제목">사용 범위</h2>
     </div>
     <div class="use">
-      <div class="card rise"><span class="tag" data-k="use.3">비상업용</span><p data-k="use.4">개인 단순 소장용 일러스트</p></div>
-      <div class="card rise"><span class="tag" data-k="use.6">방송용</span><p data-k="use.7">커버곡, 방송 대기화면 등</p></div>
-      <div class="card rise"><span class="tag" data-k="use.9">상업용</span><p data-k="use.10">일러스트 및 디자인을 이용해<br>직접적 수익창출이 발생하는 경우</p><small data-k="use.11">( 유튜브 및 굿즈 등등.. )</small></div>
+      <div class="card rise"><span class="tag" data-k="use.3" data-label="비상업용 · 이름">비상업용</span><p data-k="use.4" data-label="비상업용 · 설명">개인 단순 소장용 일러스트</p></div>
+      <div class="card rise"><span class="tag" data-k="use.6" data-label="방송용 · 이름">방송용</span><p data-k="use.7" data-label="방송용 · 설명">커버곡, 방송 대기화면 등</p></div>
+      <div class="card rise"><span class="tag" data-k="use.9" data-label="상업용 · 이름">상업용</span><p data-k="use.10" data-label="상업용 · 설명">일러스트 및 디자인을 이용해<br>직접적 수익창출이 발생하는 경우</p><small data-k="use.11" data-label="상업용 · 작은 안내">( 유튜브 및 굿즈 등등.. )</small></div>
     </div>
   </section>
 
@@ -240,19 +243,19 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   <section id="form">
     <div class="h rise">
       <svg class="sprout" viewBox="0 0 52 32"><path d="M26 32V14M26 14C20 4 10 2 2 6c8 0 16 4 24 8zm0 0c6-10 16-12 24-8-8 0-16 4-24 8zM26 14c-2-6 0-12 0-14 0 2 2 8 0 14z" fill="#4f7d3b" stroke="#4f7d3b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <h2 data-k="form.1">신청 양식</h2>
+      <h2 data-k="form.1" data-label="제목">신청 양식</h2>
     </div>
     <div class="form rise">
       <ol id="formList">
-        <li><div data-k="form.2">활동명 ( 한글 / 일본어 / 영어 ) ㅣ 방송 플랫폼 링크 :</div></li>
-        <li><div data-k="form.3">신청하시는 품목 ㅣ 수량 :</div></li>
-        <li><div data-k="form.4">버츄얼, 캐릭터 이미지 / 컨셉 등</div></li>
-        <li><div data-k="form.5">원하는 컨셉 / 색상 / 구도 참고 이미지 등<small>( 오마카세 작업 가능하나, 기초적인 컨셉은 잡아주셔야합니다. ex ) 고양이, 문어 )</small></div></li>
-        <li><div data-k="form.6">원하시는 마감 날짜 (안내 드린 시작일 기준 5일) :</div></li>
-        <li><div data-k="form.7">작업물 공개 가능 날짜 (비공개 시 추가금O) :</div></li>
-        <li><div data-k="form.8">기타 :</div></li>
+        <li><div data-k="form.2" data-label="1번">활동명 ( 한글 / 일본어 / 영어 ) ㅣ 방송 플랫폼 링크 :</div></li>
+        <li><div data-k="form.3" data-label="2번">신청하시는 품목 ㅣ 수량 :</div></li>
+        <li><div data-k="form.4" data-label="3번">버츄얼, 캐릭터 이미지 / 컨셉 등</div></li>
+        <li><div data-k="form.5" data-label="4번 (작은 안내 포함)">원하는 컨셉 / 색상 / 구도 참고 이미지 등<small>( 오마카세 작업 가능하나, 기초적인 컨셉은 잡아주셔야합니다. ex ) 고양이, 문어 )</small></div></li>
+        <li><div data-k="form.6" data-label="5번">원하시는 마감 날짜 (안내 드린 시작일 기준 5일) :</div></li>
+        <li><div data-k="form.7" data-label="6번">작업물 공개 가능 날짜 (비공개 시 추가금O) :</div></li>
+        <li><div data-k="form.8" data-label="7번">기타 :</div></li>
       </ol>
-      <button class="copy" id="copyBtn" type="button" data-k="form.9">양식 복사하기 🍅</button>
+      <button class="copy" id="copyBtn" type="button" data-k="form.9" data-label="복사 버튼 글자">양식 복사하기 🍅</button>
     </div>
   </section>
 
@@ -260,14 +263,14 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   <section id="collab">
     <div class="h rise">
       <svg class="sprout" viewBox="0 0 52 32"><path d="M26 32V14M26 14C20 4 10 2 2 6c8 0 16 4 24 8zm0 0c6-10 16-12 24-8-8 0-16 4-24 8zM26 14c-2-6 0-12 0-14 0 2 2 8 0 14z" fill="#4f7d3b" stroke="#4f7d3b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <h2 data-k="collab.1">협업 작가 안내</h2>
+      <h2 data-k="collab.1" data-label="제목">협업 작가 안내</h2>
     </div>
     <a class="collab rise" id="collabLink" href="https://artmug.kr/index.php?channel=view&amp;uid=33431" target="_blank" rel="noopener">
       <img src="../orbita-logo.webp" width="132" height="132" alt="디자인·오르비타 로고" draggable="false">
       <span class="txt">
-        <span class="who" data-k="collab.2">디자인·오르비타</span>
-        <span class="desc" data-k="collab.3">오르비타 작가님께 데뷔 패키지 A 신청 후<br>미니, 팬 캐릭터 디자인 신청 시 <b>15% 할인</b>해 드려요.</span>
-        <span class="note" data-k="collab.4">※ 동시 신청 시에만 적용됩니다.</span>
+        <span class="who" data-k="collab.2" data-label="작가 이름">디자인·오르비타</span>
+        <span class="desc" data-k="collab.3" data-label="안내 문구">오르비타 작가님께 데뷔 패키지 A 신청 후<br>미니, 팬 캐릭터 디자인 신청 시 <b>15% 할인</b>해 드려요.</span>
+        <span class="note" data-k="collab.4" data-label="작은 안내">※ 동시 신청 시에만 적용됩니다.</span>
       </span>
       <span class="go" aria-hidden="true"><svg viewBox="0 0 22 22"><path d="M8 4l7 7-7 7" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
@@ -277,14 +280,14 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   <section id="sample">
     <div class="h rise">
       <svg class="sprout" viewBox="0 0 52 32"><path d="M26 32V14M26 14C20 4 10 2 2 6c8 0 16 4 24 8zm0 0c6-10 16-12 24-8-8 0-16 4-24 8zM26 14c-2-6 0-12 0-14 0 2 2 8 0 14z" fill="#4f7d3b" stroke="#4f7d3b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <h2 data-k="sample.1">샘플</h2>
+      <h2 data-k="sample.1" data-label="제목">샘플</h2>
     </div>
-    <div class="gallery" id="g-sample"></div>
-    <p class="sub-h rise" data-k="sample.2">디자인 참고자료</p>
-    <div class="gallery" id="g-ref"></div>
+    <div class="gallery" id="g-sample" data-g="sample" data-name="샘플"></div>
+    <p class="sub-h rise" data-hide-empty="ref" data-k="sample.2" data-label="디자인 참고자료 제목">디자인 참고자료</p>
+    <div class="gallery" id="g-ref" data-g="ref" data-name="디자인 참고자료"></div>
   </section>
 
-  <p class="foot" data-k="foot.1">※ 모든 이미지는 저작권이 있는 이미지입니다. 무단 도용 및 복제를 금합니다.</p>
+  <p class="foot" data-k="foot.1" data-label="저작권 안내">※ 모든 이미지는 저작권이 있는 이미지입니다. 무단 도용 및 복제를 금합니다.</p>
 </div>
 
 <div class="lb" id="lb"><img alt="" referrerpolicy="no-referrer"></div>
@@ -294,7 +297,7 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
 (function(){
   var EDIT=window.TOMA_EDIT;
   var DEF_PF={"sample": [{"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17930608230_Re.jpg", "w": 1180, "h": 236}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17925245480_Re.jpg", "w": 1180, "h": 337}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17923350190_Re.jpg", "w": 1180, "h": 2364}], "ref": [{"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428521_Re.jpg", "w": 1180, "h": 510}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428532_Re.jpg", "w": 1180, "h": 441}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428533_Re.jpg", "w": 1180, "h": 465}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428534_Re.jpg", "w": 1180, "h": 460}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17851230140_Re.jpg", "w": 1180, "h": 449}, {"src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17851230141_Re.jpg", "w": 1180, "h": 456}]};
-  var DEF_LINK=document.getElementById('collabLink').getAttribute('href');
+  var CL=document.getElementById('collabLink'),DEF_LINK=CL?CL.getAttribute('href'):'';
   var DEF_TEXTS={};
   [].forEach.call(document.querySelectorAll('[data-k]'),function(el){DEF_TEXTS[el.getAttribute('data-k')]=el.innerHTML;});
   var inFrame=window.top!==window, vp=null, started=false;
@@ -303,8 +306,7 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   function esc(v){return String(v).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   // 저장소 기준 경로(portfolio/...)는 한 칸 위에서 찾기
   function u(p){p=String(p||'');return /^(https?:|data:|blob:|\/)/.test(p)?p:'../'+p;}
-  function renderGallery(id,list,label){
-    var box=document.getElementById(id);
+  function renderGallery(box,list,label){
     box.innerHTML=(list||[]).map(function(it,i){
       var w=it.w||1180,h=it.h||800;
       return '<img class="rise'+(started?' on':'')+'" width="'+w+'" height="'+h+'" loading="lazy" referrerpolicy="no-referrer" draggable="false" alt="'+label+' '+(i+1)+'" src="'+esc(u(it.src))+'" data-orig="'+esc(u(it.orig||it.src))+'">';
@@ -313,15 +315,22 @@ window.__tomaC=window.TOMA_EDIT?Promise.resolve(null):fetch('content.json?t='+Da
   function apply(c){
     c=c||{};var T=c.texts||{};
     [].forEach.call(document.querySelectorAll('[data-k]'),function(el){var k=el.getAttribute('data-k');var v=Object.prototype.hasOwnProperty.call(T,k)&&T[k]!=null?T[k]:DEF_TEXTS[k];if(el.innerHTML!==v)el.innerHTML=v;});
-    document.getElementById('collabLink').setAttribute('href',(c.links&&c.links.collab)||DEF_LINK);
-    var P=c.pf||DEF_PF;
-    renderGallery('g-sample',P.sample,'샘플');
-    renderGallery('g-ref',P.ref,'디자인 참고자료');
-    var subh=document.querySelector('#sample .sub-h');if(subh)subh.style.display=(P.ref&&P.ref.length)?'':'none';
+    if(CL)CL.setAttribute('href',(c.links&&c.links.collab)||DEF_LINK);
+    var P=c.pf||{};
+    [].forEach.call(document.querySelectorAll('.gallery[data-g]'),function(box){var g=box.getAttribute('data-g');renderGallery(box,Array.isArray(P[g])?P[g]:DEF_PF[g],box.getAttribute('data-name')||'');});
+    [].forEach.call(document.querySelectorAll('[data-hide-empty]'),function(el){var L=Array.isArray(P[el.getAttribute('data-hide-empty')])?P[el.getAttribute('data-hide-empty')]:DEF_PF[el.getAttribute('data-hide-empty')];el.style.display=(L&&L.length)?'':'none';});
     if(started)check();
     send();
   }
-  window.TOMA={apply:apply,defaults:function(){return {texts:JSON.parse(JSON.stringify(DEF_TEXTS)),links:{collab:DEF_LINK},pf:JSON.parse(JSON.stringify(DEF_PF))};}};
+  function meta(){
+    var labels={},secs={},groups=[];
+    [].forEach.call(document.querySelectorAll('[data-k]'),function(el){labels[el.getAttribute('data-k')]=el.getAttribute('data-label')||'';});
+    [].forEach.call(document.querySelectorAll('section[id]'),function(sc){var h=sc.querySelector('h2');secs[sc.id]=h?h.textContent.trim():sc.id;});
+    secs.foot='맨 아래';
+    [].forEach.call(document.querySelectorAll('.gallery[data-g]'),function(g){groups.push({id:g.getAttribute('data-g'),name:g.getAttribute('data-name')||g.getAttribute('data-g')});});
+    return {labels:labels,secs:secs,groups:groups,hasCollab:!!CL};
+  }
+  window.TOMA={apply:apply,defaults:function(){var m=meta();return {texts:JSON.parse(JSON.stringify(DEF_TEXTS)),links:{collab:DEF_LINK},pf:JSON.parse(JSON.stringify(DEF_PF)),labels:m.labels,secs:m.secs,groups:m.groups,hasCollab:m.hasCollab};}};
 
   // ===== 스크롤 등장 효과 =====
   var io=null;

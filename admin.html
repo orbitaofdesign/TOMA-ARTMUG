@@ -151,8 +151,8 @@ button{cursor:pointer}
         <div class="pvbox" id="pvbox"><iframe id="pv" title="페이지 미리보기"></iframe></div>
       </div>
       <aside class="side">
-        <h3>협업 배너 링크</h3>
-        <div class="linkbox"><label for="lk">배너를 눌렀을 때 열리는 주소</label><input class="in" id="lk" type="url" placeholder="https://artmug.kr/..."></div>
+        <h3 id="lkH">협업 배너 링크</h3>
+        <div class="linkbox" id="lkB"><label for="lk">배너를 눌렀을 때 열리는 주소</label><input class="in" id="lk" type="url" placeholder="https://artmug.kr/..."></div>
         <input class="in search" id="q" type="search" placeholder="문구 찾기">
         <div class="filters"><button class="chip on" data-fl="all">전체</button><button class="chip" data-fl="ch">수정한 문구</button></div>
         <div class="list" id="tlist"></div>
@@ -187,7 +187,7 @@ try{var sc=JSON.parse(localStorage.getItem('toma.cfg')||'null');if(sc)Object.key
 var TOKEN='';try{TOKEN=localStorage.getItem('toma.token')||'';}catch(e){}
 var PAGES=[{id:'mini-fan-character',name:'미니·팬 캐릭터 디자인'}],PAGE=null;
 var SITE=location.href.replace(/[^/]*([?#].*)?$/,'');
-var GROUPS=[{id:'sample',name:'샘플',dir:'sample'},{id:'ref',name:'디자인 참고자료',dir:'ref'}];
+var GROUPS=[];
 var SEC={notice:'공지사항',guide:'작업 관련 안내',process:'작업 순서',use:'사용 범위',form:'신청 양식',collab:'협업 작가 안내',sample:'샘플',foot:'맨 아래'};
 var LABEL={'notice.1':'제목','notice.2':'부제','notice.3':'카드 1','notice.4':'카드 2','notice.5':'카드 3','notice.6':'카드 4',
  'guide.1':'제목','guide.2':'카드 1','guide.3':'카드 2','guide.4':'카드 3',
@@ -214,7 +214,7 @@ function normalize(c){
   if(c.texts&&typeof c.texts==='object')Object.keys(c.texts).forEach(function(k){if(typeof c.texts[k]==='string')o.texts[k]=c.texts[k];});
   if(c.links&&typeof c.links.collab==='string')o.links.collab=c.links.collab;
   var P=c.pf||DEF.pf;o.pf={};
-  GROUPS.forEach(function(g){o.pf[g.id]=(P&&Array.isArray(P[g.id])?P[g.id]:[]).filter(function(x){return x&&x.src;}).map(function(x){return {src:x.src,orig:x.orig||x.src,w:x.w||0,h:x.h||0};});});
+  GROUPS.forEach(function(g){o.pf[g.id]=(P&&Array.isArray(P[g.id])?P[g.id]:(DEF.pf&&Array.isArray(DEF.pf[g.id])?DEF.pf[g.id]:[])).filter(function(x){return x&&x.src;}).map(function(x){return {src:x.src,orig:x.orig||x.src,w:x.w||0,h:x.h||0};});});
   return o;
 }
 function pth(f){return PAGE+'/'+f;}
@@ -247,7 +247,11 @@ pv.addEventListener('load',function(){
 });
 function init(w){
   pdoc=w.document;
-  if(!DEF){DEF=w.TOMA.defaults();boot();}
+  if(!DEF){DEF=w.TOMA.defaults();
+    GROUPS=(DEF.groups||[]).map(function(g){return {id:g.id,name:g.name,dir:g.id};});
+    if(!GROUPS.length&&DEF.pf)GROUPS=Object.keys(DEF.pf).map(function(k){return {id:k,name:k,dir:k};});
+    var hc=DEF.hasCollab!==false;$('lkH').style.display=hc?'':'none';$('lkB').style.display=hc?'':'none';
+    boot();}
   var st=pdoc.createElement('style');
   st.textContent='[data-k]{outline:2px dashed transparent;outline-offset:3px;border-radius:4px;transition:outline-color .15s}[data-k]:hover{outline-color:#f3b3b3}[data-k]:focus{outline:2px solid #e46868;background:rgba(255,224,102,.18)}[data-k].ch{box-shadow:inset 0 -3px 0 rgba(255,214,64,.7)}[data-k].flash{animation:fl 1.2s ease}@keyframes fl{0%,60%{background:rgba(255,224,102,.6)}100%{background:transparent}}.fx{display:none!important}';
   pdoc.head.appendChild(st);
@@ -271,9 +275,9 @@ function renderList(){
   if(!DEF||!state)return;var q=$('q').value.trim(),html='',last='';
   Object.keys(DEF.texts).forEach(function(k){
     var v=txt(k),ch=v!==DEF.texts[k],p=plain(v);
-    if(FL==='ch'&&!ch)return;if(q&&p.indexOf(q)<0&&(LABEL[k]||'').indexOf(q)<0)return;
-    var s=k.split('.')[0];if(s!==last){html+='<div class="grp">'+esc(SEC[s]||s)+'</div>';last=s;}
-    html+='<button class="ti" data-k="'+k+'"><span class="tl">'+esc(LABEL[k]||k)+(ch?'<i>수정됨</i><span class="rs" data-rs="'+k+'">기본 문구로</span>':'')+'</span><span class="tt">'+esc(p||'(비어 있음)')+'</span></button>';
+    if(FL==='ch'&&!ch)return;if(q&&p.indexOf(q)<0&&(((DEF.labels&&DEF.labels[k])||LABEL[k]||'')).indexOf(q)<0)return;
+    var s=k.split('.')[0];if(s!==last){html+='<div class="grp">'+esc((DEF.secs&&DEF.secs[s])||SEC[s]||s)+'</div>';last=s;}
+    html+='<button class="ti" data-k="'+k+'"><span class="tl">'+esc((DEF.labels&&DEF.labels[k])||LABEL[k]||k)+(ch?'<i>수정됨</i><span class="rs" data-rs="'+k+'">기본 문구로</span>':'')+'</span><span class="tt">'+esc(p||'(비어 있음)')+'</span></button>';
   });
   $('tlist').innerHTML=html||'<div class="hint" style="padding:16px">해당하는 문구가 없어요.</div>';
 }

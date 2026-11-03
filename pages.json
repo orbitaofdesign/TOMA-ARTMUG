@@ -1,3 +1,10 @@
 [
- {"id":"mini-fan-character","name":"미니·팬 캐릭터 디자인"}
+ {
+  "id": "mini-fan-character",
+  "name": "미니·팬 캐릭터 디자인"
+ },
+ {
+  "id": "illust",
+  "name": "일러스트 (방송용·미소녀)"
+ }
 ]
