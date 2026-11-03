@@ -212,7 +212,7 @@ section{padding:72px 24px 0;text-align:center}
         <li><div>활동명 ( 한글 / 일본어 / 영어 ) ㅣ 방송 플랫폼 링크 :</div></li>
         <li><div>신청하시는 품목 ㅣ 수량 :</div></li>
         <li><div>버츄얼, 캐릭터 이미지 / 컨셉 등</div></li>
-        <li><div>원하는 컨셉 / 색상 / 구도 참고 이미지 등</div></li>
+        <li><div>원하는 컨셉 / 색상 / 구도 참고 이미지 등<small>( 오마카세 작업 가능하나, 기초적인 컨셉은 잡아주셔야합니다. ex ) 고양이, 문어 )</small></div></li>
         <li><div>원하시는 마감 날짜 (안내 드린 시작일 기준 5일) :</div></li>
         <li><div>작업물 공개 가능 날짜 (비공개 시 추가금O) :</div></li>
         <li><div>기타 :</div></li>
@@ -274,7 +274,7 @@ section{padding:72px 24px 0;text-align:center}
   // 양식 복사
   var btn=document.getElementById('copyBtn'),toast=document.getElementById('toast');
   btn.addEventListener('click',function(){
-    var lines=[].slice.call(document.querySelectorAll('#formList li')).map(function(li,i){return (i+1)+'. '+li.querySelector('div').textContent.trim()+' ';});
+    var lines=[].slice.call(document.querySelectorAll('#formList li')).map(function(li,i){return (i+1)+'. '+li.querySelector('div').childNodes[0].textContent.trim()+' ';});
     var txt='[ 신청양식 ]\n'+lines.join('\n\n');
     function ok(){btn.classList.add('done');btn.textContent='복사 완료! ✔';place(toast,true);toast.classList.add('on');setTimeout(function(){btn.classList.remove('done');btn.textContent='양식 복사하기 🍅';toast.classList.remove('on');},2200);}
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(ok,fallback);}else fallback();
