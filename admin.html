@@ -25,6 +25,8 @@ button{cursor:pointer}
 .status.ok b{background:#9be27a;opacity:1}
 .status.err b{background:#2b0000;opacity:1}
 .sp{flex:1}
+.pgsel{flex:none;height:36px;max-width:220px;padding:0 10px;border-radius:10px;border:0;background:#fff;color:var(--red);font-size:13px;font-weight:700}
+.code{width:100%;height:150px;padding:10px;border:1px solid var(--line);border-radius:10px;font-family:ui-monospace,Consolas,monospace;font-size:11px;line-height:16px;resize:vertical;word-break:break-all}
 .tb{flex:none;height:36px;padding:0 12px;border-radius:10px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;font-size:13px;font-weight:500;white-space:nowrap}
 .tb:hover{background:rgba(255,255,255,.25)}
 .tb.pub{background:#fff;color:var(--red);border-color:#fff;font-weight:700}
@@ -127,6 +129,7 @@ button{cursor:pointer}
 <body>
 <header class="top">
   <div class="brand">🍅 토마짜 <small>관리자</small></div>
+  <select class="pgsel" id="pgSel" title="고칠 페이지"></select><button class="tb" id="bNew" title="새 페이지 폴더 만들기">+ 새 페이지</button><button class="tb" id="bCode" title="이 페이지를 아트머그에 넣는 iframe 코드">iframe 코드</button>
   <div class="status" id="status"><b></b><span id="statusT">불러오는 중…</span></div>
   <div class="sp"></div>
   <button class="tb" id="bDraft" title="이 브라우저에 지금 상태를 임시로 저장해요">임시 저장</button>
@@ -182,6 +185,8 @@ button{cursor:pointer}
 var CFG={owner:'orbitaofdesign',repo:'TOMA-ARTMUG',branch:'main'};
 try{var sc=JSON.parse(localStorage.getItem('toma.cfg')||'null');if(sc)Object.keys(sc).forEach(function(k){if(sc[k])CFG[k]=sc[k];});}catch(e){}
 var TOKEN='';try{TOKEN=localStorage.getItem('toma.token')||'';}catch(e){}
+var PAGES=[{id:'mini-fan-character',name:'미니·팬 캐릭터 디자인'}],PAGE=null;
+var SITE=location.href.replace(/[^/]*([?#].*)?$/,'');
 var GROUPS=[{id:'sample',name:'샘플',dir:'sample'},{id:'ref',name:'디자인 참고자료',dir:'ref'}];
 var SEC={notice:'공지사항',guide:'작업 관련 안내',process:'작업 순서',use:'사용 범위',form:'신청 양식',collab:'협업 작가 안내',sample:'샘플',foot:'맨 아래'};
 var LABEL={'notice.1':'제목','notice.2':'부제','notice.3':'카드 1','notice.4':'카드 2','notice.5':'카드 3','notice.6':'카드 4',
@@ -212,10 +217,13 @@ function normalize(c){
   GROUPS.forEach(function(g){o.pf[g.id]=(P&&Array.isArray(P[g.id])?P[g.id]:[]).filter(function(x){return x&&x.src;}).map(function(x){return {src:x.src,orig:x.orig||x.src,w:x.w||0,h:x.h||0};});});
   return o;
 }
+function pth(f){return PAGE+'/'+f;}
+function absUrl(p){return /^(https?:|data:|blob:)/.test(p)?p:SITE+p;}
 function txt(k){return Object.prototype.hasOwnProperty.call(state.texts,k)?state.texts[k]:DEF.texts[k];}
 function link(){return state.links.collab||DEF.links.collab;}
 function srcUrl(p){return pending[p]||cache[p]||p;}
-function previewState(){var c=clone(state);GROUPS.forEach(function(g){c.pf[g.id]=c.pf[g.id].map(function(x){return {src:srcUrl(x.src),orig:srcUrl(x.orig),w:x.w,h:x.h};});});c.links.collab=link();return c;}
+function srcAbs(p){return pending[p]||cache[p]||absUrl(p);}
+function previewState(){var c=clone(state);GROUPS.forEach(function(g){c.pf[g.id]=c.pf[g.id].map(function(x){return {src:srcAbs(x.src),orig:srcAbs(x.orig),w:x.w,h:x.h};});});c.links.collab=link();return c;}
 function contentForSave(){var c={v:1,rev:Date.now(),texts:{},links:{},pf:clone(state.pf)};
   Object.keys(state.texts).forEach(function(k){if(state.texts[k]!==DEF.texts[k])c.texts[k]=state.texts[k];});
   if(state.links.collab&&state.links.collab!==DEF.links.collab)c.links.collab=state.links.collab;return c;}
@@ -227,11 +235,11 @@ function api(path,opt){opt=opt||{};var h={'Accept':'application/vnd.github+json'
     return r.status===204?null:r.json();});}
 function b64utf8(b){var bin=atob(b.replace(/\s/g,''));var u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder().decode(u);}
 function utf8b64(s){var u=new TextEncoder().encode(s),bin='';for(var i=0;i<u.length;i+=0x8000)bin+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(bin);}
-function loadRemote(ref){return api('/contents/content.json?ref='+encodeURIComponent(ref||CFG.branch)).then(function(j){return JSON.parse(b64utf8(j.content));});}
+function loadRemote(ref,page){return api('/contents/'+(page||PAGE)+'/content.json?ref='+encodeURIComponent(ref||CFG.branch)).then(function(j){return JSON.parse(b64utf8(j.content));});}
 
 /* ===== 미리보기 (문구 편집) ===== */
 var pv=$('pv'),pdoc=null;
-pv.src='index.html?edit=1&t='+Date.now();
+
 window.addEventListener('message',function(e){if(e.source!==pv.contentWindow)return;var d=e.data||{};if(d.type==='tomaHeight'&&d.height)pv.style.height=Math.max(600,d.height)+'px';});
 pv.addEventListener('load',function(){
   var w=pv.contentWindow;
@@ -352,7 +360,7 @@ function fileData(f){return new Promise(function(res){var r=new FileReader();r.o
 function stamp(){var d=new Date();function p(n){return (n<10?'0':'')+n;}return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds())+'-'+(++uid)+Math.random().toString(36).slice(2,5);}
 function processFile(file,dir){
   return readImg(file).then(function(im){
-    var base='portfolio/'+dir+'/'+stamp();
+    var base='portfolio/'+PAGE+'/'+dir+'/'+stamp();
     // 페이지용: 가로 1600px 이하(세로 최대 12000px), webp 압축
     var pc=draw(im,1600,12000),pd=toData(pc,'image/webp',0.88),pext=pd.indexOf('data:image/webp')===0?'webp':'jpg';
     var page=base+'.'+pext;pending[page]=pd;
@@ -379,17 +387,18 @@ $('ov').addEventListener('click',function(e){if(e.target===$('ov'))close();});
 function ask(title,msg,okLabel,ok,danger){dlg('<h3>'+esc(title)+'</h3><p>'+esc(msg)+'</p><div class="row"><button class="btn" id="dN">취소</button><button class="btn '+(danger?'warn':'r')+'" id="dY">'+esc(okLabel)+'</button></div>');$('dN').onclick=close;$('dY').onclick=function(){close();ok();};}
 
 /* ===== 임시 저장 · 백업 파일 · 예전 파일 불러오기 ===== */
+function draftKey(){return 'toma.draft.'+PAGE;}
 function usedPending(){var u={};GROUPS.forEach(function(g){state.pf[g.id].forEach(function(x){[x.src,x.orig].forEach(function(p){if(pending[p])u[p]=pending[p];});});});return u;}
 $('bDraft').onclick=function(){
   var d={kind:'toma-draft',savedAt:Date.now(),content:contentForSave(),pending:usedPending()};
-  try{localStorage.setItem('toma.draft',JSON.stringify(d));toast('이 브라우저에 임시 저장했어요');}
-  catch(e){try{d.pending={};localStorage.setItem('toma.draft',JSON.stringify(d));toast('문구·순서는 임시 저장했어요. 새 이미지는 용량이 커서 빠졌으니 \'현재 상태 파일로 저장\'을 써 주세요',5000);}catch(e2){toast('임시 저장에 실패했어요. \'현재 상태 파일로 저장\'을 써 주세요',4000);}}
+  try{localStorage.setItem(draftKey(),JSON.stringify(d));toast('이 브라우저에 임시 저장했어요');}
+  catch(e){try{d.pending={};localStorage.setItem(draftKey(),JSON.stringify(d));toast('문구·순서는 임시 저장했어요. 새 이미지는 용량이 커서 빠졌으니 \'현재 상태 파일로 저장\'을 써 주세요',5000);}catch(e2){toast('임시 저장에 실패했어요. \'현재 상태 파일로 저장\'을 써 주세요',4000);}}
 };
 function fmt(t){var d=new Date(t);function p(n){return (n<10?'0':'')+n;}return d.getFullYear()+'.'+p(d.getMonth()+1)+'.'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());}
 $('bBackup').onclick=function(){
-  var d={kind:'toma-backup',savedAt:Date.now(),content:contentForSave(),pending:usedPending()};
+  var d={kind:'toma-backup',page:PAGE,savedAt:Date.now(),content:contentForSave(),pending:usedPending()};
   var b=new Blob([JSON.stringify(d)],{type:'application/json'}),a=document.createElement('a');
-  a.href=URL.createObjectURL(b);a.download='toma-backup-'+fmt(d.savedAt).replace(/[. :]/g,'').replace(/^(\d{8})/,'$1-')+'.json';document.body.appendChild(a);a.click();a.remove();
+  a.href=URL.createObjectURL(b);a.download='toma-'+PAGE+'-backup-'+fmt(d.savedAt).replace(/[. :]/g,'').replace(/^(\d{8})/,'$1-')+'.json';document.body.appendChild(a);a.click();a.remove();
   setTimeout(function(){URL.revokeObjectURL(a.href);},2000);toast('백업 파일을 내려받았어요');
 };
 function useContent(c,pend,msg){state=normalize(c);Object.keys(pend||{}).forEach(function(k){pending[k]=pend[k];});moveSel=null;$('lk').value=state.links.collab||DEF.links.collab;markDirty();refreshPreview();renderList();renderPf();toast(msg||'불러왔어요. 확인 후 \'사이트에 반영\'을 눌러 주세요',4000);}
@@ -400,14 +409,14 @@ $('bLoad').onclick=function(){
     '<div class="row"><button class="btn" id="lX">닫기</button></div>');
   $('lX').onclick=close;
   $('lBak').onclick=function(){$('fBak').value='';$('fBak').click();};
-  $('lDraft').onclick=function(){var d=null;try{d=JSON.parse(localStorage.getItem('toma.draft')||'null');}catch(e){}if(!d){toast('임시 저장된 내용이 없어요');return;}close();useContent(d.content,d.pending,fmt(d.savedAt)+' 임시 저장을 불러왔어요');};
-  api('/commits?path=content.json&per_page=30&sha='+encodeURIComponent(CFG.branch)).then(function(list){
+  $('lDraft').onclick=function(){var d=null;try{d=JSON.parse(localStorage.getItem(draftKey())||'null');}catch(e){}if(!d){toast('임시 저장된 내용이 없어요');return;}close();useContent(d.content,d.pending,fmt(d.savedAt)+' 임시 저장을 불러왔어요');};
+  api('/commits?path='+pth('content.json')+'&per_page=30&sha='+encodeURIComponent(CFG.branch)).then(function(list){
     if(!list||!list.length){$('vers').innerHTML='<div class="hint">아직 반영한 버전이 없어요.</div>';return;}
     $('vers').innerHTML=list.map(function(c,i){return '<button class="ver" data-sha="'+c.sha+'"><b>'+fmt(c.commit.author.date)+'</b><span>'+esc((c.commit.message||'').split('\n')[0])+'</span>'+(i===0?'<span style="flex:none;color:var(--red)">현재 사이트</span>':'')+'</button>';}).join('');
     [].forEach.call($('vers').querySelectorAll('.ver'),function(b){b.onclick=function(){busy(true,'불러오는 중…');loadRemote(b.getAttribute('data-sha')).then(function(c){busy(false);close();useContent(c,{},b.querySelector('b').textContent+' 버전을 불러왔어요. 확인 후 \'사이트에 반영\'을 눌러 주세요');}).catch(function(e){busy(false);toast('불러오지 못했어요: '+e.message,4000);});};});
   }).catch(function(e){$('vers').innerHTML='<div class="hint">버전 기록을 불러오지 못했어요 ('+esc(e.message)+')</div>';});
 };
-$('fBak').onchange=function(){var f=this.files&&this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!d.content)throw new Error('백업 파일 형식이 아니에요');close();useContent(d.content,d.pending,(d.savedAt?fmt(d.savedAt)+' ':'')+'백업 파일을 불러왔어요. 확인 후 \'사이트에 반영\'을 눌러 주세요');}catch(e){toast('불러오지 못했어요: '+e.message,4000);}};r.readAsText(f);};
+$('fBak').onchange=function(){var f=this.files&&this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!d.content)throw new Error('백업 파일 형식이 아니에요');if(d.page&&d.page!==PAGE&&!confirm('이 백업은 \''+pageName(d.page)+'\' 페이지 것이에요. 지금 페이지(\''+pageName(PAGE)+'\')에 불러올까요?'))return;close();useContent(d.content,d.pending,(d.savedAt?fmt(d.savedAt)+' ':'')+'백업 파일을 불러왔어요. 확인 후 \'사이트에 반영\'을 눌러 주세요');}catch(e){toast('불러오지 못했어요: '+e.message,4000);}};r.readAsText(f);};
 
 /* ===== 연결 설정 ===== */
 function cfgDlg(after){
@@ -437,22 +446,22 @@ function publish(){
     var baseTree=c.tree.sha;
     return paths.reduce(function(p,path){return p.then(function(){var d=files[path];return api('/git/blobs',{method:'POST',body:{content:d.slice(d.indexOf(',')+1),encoding:'base64'}}).then(function(b){tree.push({path:path,mode:'100644',type:'blob',sha:b.sha});busy(true,'이미지 올리는 중… ('+(++done)+'/'+paths.length+')');});});},Promise.resolve())
       .then(function(){return api('/git/blobs',{method:'POST',body:{content:utf8b64(JSON.stringify(content,null,1)),encoding:'base64'}});})
-      .then(function(b){tree.push({path:'content.json',mode:'100644',type:'blob',sha:b.sha});return api('/git/trees',{method:'POST',body:{base_tree:baseTree,tree:tree}});});
+      .then(function(b){tree.push({path:pth('content.json'),mode:'100644',type:'blob',sha:b.sha});return api('/git/trees',{method:'POST',body:{base_tree:baseTree,tree:tree}});});
   }).then(function(t){
     var n=paths.filter(function(p){return p.indexOf('_orig.')<0;}).length;
-    return api('/git/commits',{method:'POST',body:{message:'관리자 페이지에서 반영'+(n?' (새 이미지 '+n+'장)':''),tree:t.sha,parents:[base]}});
+    return api('/git/commits',{method:'POST',body:{message:'['+PAGE+'] 관리자 페이지에서 반영'+(n?' (새 이미지 '+n+'장)':''),tree:t.sha,parents:[base]}});
   }).then(function(c){return api('/git/refs/heads/'+CFG.branch,{method:'PATCH',body:{sha:c.sha}});}).then(function(){
     paths.forEach(function(p){cache[p]=pending[p];delete pending[p];});
     dirty=false;busy(false);$('bPub').disabled=false;renderPf();
-    try{localStorage.removeItem('toma.draft');}catch(e){}
+    try{localStorage.removeItem(draftKey());}catch(e){}
     setStatus('','반영했어요 · 사이트 적용 기다리는 중…');toast('반영했어요! 1~2분 뒤 사이트에 적용돼요',4000);
     var tries=0;clearInterval(pollT);
-    pollT=setInterval(function(){tries++;fetch('content.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
+    pollT=setInterval(function(){tries++;fetch(pth('content.json')+'?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
       if(j&&j.rev===content.rev){clearInterval(pollT);if(!dirty)setStatus('ok','사이트에 적용됐어요 ('+fmt(Date.now())+')');toast('사이트에 적용됐어요 🍅');}
       else if(tries>40){clearInterval(pollT);if(!dirty)setStatus('','반영했어요 · 잠시 뒤 새로고침해서 확인해 주세요');}}).catch(function(){});},6000);
   }).catch(function(e){
     busy(false);$('bPub').disabled=false;setStatus('err','반영 실패: '+e.message);
-    var m=e.status===401?'토큰이 맞지 않거나 만료됐어요. ⚙ 연결 설정에서 다시 넣어 주세요':e.status===403||e.status===404?'토큰에 이 저장소 쓰기 권한(Contents: Read and write)이 있는지 확인해 주세요':e.message;
+    var m=e.status===409?'저장소가 비어 있거나 다른 곳에서 동시에 바뀌었어요. 잠시 뒤 다시 시도해 주세요':e.status===401?'토큰이 맞지 않거나 만료됐어요. ⚙ 연결 설정에서 다시 넣어 주세요':e.status===403||e.status===404?'토큰에 이 저장소 쓰기 권한(Contents: Read and write)이 있는지 확인해 주세요':e.message;
     toast('반영하지 못했어요: '+m,6000);
   });
 }
@@ -463,14 +472,82 @@ function showView(v){[].forEach.call(document.querySelectorAll('.nav button'),fu
 
 /* ===== 시작 ===== */
 function boot(){
-  loadRemote().catch(function(){return fetch('content.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});})
+  var pg=PAGE;
+  loadRemote().catch(function(){return fetch(pth('content.json')+'?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});})
   .then(function(c){
-    state=normalize(c);$('lk').value=link();refreshPreview();renderList();renderPf();
+    if(pg!==PAGE)return;
+    state=normalize(c);dirty=false;$('lk').value=link();refreshPreview();renderList();renderPf();
     setStatus(c?'ok':'',c?'사이트와 같은 상태예요':'기본 상태예요 (아직 반영한 적 없음)');
-    var d=null;try{d=JSON.parse(localStorage.getItem('toma.draft')||'null');}catch(e){}
+    var d=null;try{d=JSON.parse(localStorage.getItem(draftKey())||'null');}catch(e){}
     if(d&&d.content){ask('임시 저장된 내용이 있어요',fmt(d.savedAt)+'에 임시 저장한 내용을 불러올까요? 안 불러오면 지금 사이트 상태로 시작해요.','불러오기',function(){useContent(d.content,d.pending,'임시 저장을 불러왔어요');});}
   });
 }
+
+/* ===== 페이지 선택 · 새 페이지 · iframe 코드 ===== */
+function pageName(id){var p=PAGES.filter(function(x){return x.id===id;})[0];return p?p.name:id;}
+function renderPages(){$('pgSel').innerHTML=PAGES.map(function(p){return '<option value="'+esc(p.id)+'"'+(p.id===PAGE?' selected':'')+'>'+esc(p.name)+'</option>';}).join('');}
+function openPage(id){
+  PAGE=id;try{localStorage.setItem('toma.page',id);}catch(e){}
+  history.replaceState(null,'','?page='+encodeURIComponent(id));
+  DEF=null;state=null;pending={};dirty=false;moveSel=null;pdoc=null;clearInterval(pollT);
+  setStatus('','불러오는 중…');$('tlist').innerHTML='';$('groups').innerHTML='';renderPages();
+  document.title='토마짜 관리자 · '+pageName(id);
+  pv.style.height='3000px';pv.src=id+'/index.html?edit=1&t='+Date.now();
+}
+$('pgSel').onchange=function(){var v=$('pgSel').value;if(v===PAGE)return;
+  if(dirty){ask('다른 페이지로 이동','반영하지 않은 변경 사항이 있어요. 이동하면 사라져요. (필요하면 먼저 임시 저장을 눌러 주세요)','이동하기',function(){openPage(v);},true);renderPages();return;}
+  openPage(v);};
+function iframeCode(id){var url=SITE+id+'/';
+  return '<iframe id="toma-frame" src="'+url+'" allow="clipboard-write" scrolling="no" style="display:block;width:100%;max-width:1180px;margin:0 auto;border:0;height:5200px;overflow:hidden;" onload="var f=this;window.addEventListener(\'message\',function(e){if(e.source!==f.contentWindow)return;var d=e.data||{};if(d.type===\'tomaHeight\'&&d.height){f.style.height=d.height+\'px\';}});function s(){var r=f.getBoundingClientRect();f.contentWindow.postMessage({type:\'tomaViewport\',top:-r.top,height:window.innerHeight},\'*\');}window.addEventListener(\'scroll\',s,{passive:true});window.addEventListener(\'resize\',s);s();"></iframe>';}
+function codeDlg(id,title){
+  dlg('<h3>'+esc(title||('\''+pageName(id)+'\' iframe 코드'))+'</h3><p>아트머그 작품 상세 설명의 HTML 모드에 그대로 붙여 넣어 주세요. 주소: <b>'+esc(SITE+id+'/')+'</b></p><textarea class="code" id="cdT" readonly>'+esc(iframeCode(id))+'</textarea><div class="row"><button class="btn" id="cdX">닫기</button><button class="btn r" id="cdC">코드 복사</button></div>');
+  $('cdX').onclick=close;$('cdC').onclick=function(){var t=$('cdT');t.select();(navigator.clipboard?navigator.clipboard.writeText(t.value):Promise.reject()).then(function(){toast('복사했어요');},function(){document.execCommand('copy');toast('복사했어요');});};
+}
+$('bCode').onclick=function(){codeDlg(PAGE);};
+$('bNew').onclick=function(){
+  if(!TOKEN){cfgDlg(function(){$('bNew').click();});return;}
+  dlg('<h3>새 페이지 만들기</h3><p>지금 페이지와 같은 디자인으로 새 폴더를 만들어요. 문구와 샘플은 만든 뒤 이 관리자에서 고치면 돼요.</p>'+
+    '<div class="field"><label>폴더 이름 (주소에 들어가요 · 영어 소문자, 숫자, - 만)</label><input class="in" id="nId" placeholder="예) three-view"></div>'+
+    '<div class="field"><label>관리자에서 보이는 이름</label><input class="in" id="nName" placeholder="예) 삼면도"></div>'+
+    '<div class="field"><label><input type="checkbox" id="nCopy" checked> \''+esc(pageName(PAGE))+'\' 페이지에 반영된 문구·샘플을 복사해서 시작</label></div>'+
+    '<div class="row"><button class="btn" id="nX">취소</button><button class="btn r" id="nY">만들기</button></div>');
+  $('nX').onclick=close;
+  $('nY').onclick=function(){
+    var id=$('nId').value.trim().toLowerCase(),name=$('nName').value.trim()||id,cp=$('nCopy').checked;
+    if(!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)){toast('폴더 이름은 영어 소문자, 숫자, - 만 쓸 수 있어요',3500);return;}
+    if(PAGES.some(function(p){return p.id===id;})||/^(portfolio|admin)$/.test(id)){toast('이미 있거나 쓸 수 없는 이름이에요',3500);return;}
+    close();createPage(id,name,cp,PAGE);
+  };
+};
+function createPage(id,name,copy,from){
+  busy(true,'새 페이지 만드는 중…');var base,list=PAGES.concat([{id:id,name:name}]);
+  api('/git/ref/heads/'+CFG.branch).then(function(r){base=r.object.sha;return api('/git/commits/'+base);}).then(function(c){
+    var baseTree=c.tree.sha;
+    return api('/contents/'+from+'/index.html?ref='+base).then(function(src){
+      var tree=[{path:id+'/index.html',mode:'100644',type:'blob',sha:src.sha}];
+      return (copy?api('/contents/'+from+'/content.json?ref='+base).then(function(cj){tree.push({path:id+'/content.json',mode:'100644',type:'blob',sha:cj.sha});}).catch(function(){}):Promise.resolve())
+        .then(function(){return api('/git/blobs',{method:'POST',body:{content:utf8b64(JSON.stringify(list,null,1)+'\n'),encoding:'base64'}});})
+        .then(function(b){tree.push({path:'pages.json',mode:'100644',type:'blob',sha:b.sha});return api('/git/trees',{method:'POST',body:{base_tree:baseTree,tree:tree}});});
+    });
+  }).then(function(t){return api('/git/commits',{method:'POST',body:{message:'새 페이지 추가: '+id,tree:t.sha,parents:[base]}});})
+  .then(function(c){return api('/git/refs/heads/'+CFG.branch,{method:'PATCH',body:{sha:c.sha}});})
+  .then(function(){busy(false);PAGES=list;renderPages();toast('새 페이지를 만들었어요! 1~2분 뒤 사이트에 생겨요',4000);
+    var go=function(){if(dirty){toast('지금 페이지에 반영 안 된 변경 사항이 있어서 이동하지 않았어요',4000);return;}openPage(id);};
+    codeDlg(id,'\''+name+'\' 페이지를 만들었어요');var x=$('cdX');x.textContent='새 페이지 열기';x.onclick=function(){close();setTimeout(go,1500);};})
+  .catch(function(e){busy(false);toast('만들지 못했어요: '+e.message,5000);});
+}
+function startApp(){
+  api('/contents/pages.json?ref='+CFG.branch).then(function(j){return JSON.parse(b64utf8(j.content));})
+  .catch(function(){return fetch('pages.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});})
+  .then(function(L){
+    if(Array.isArray(L)&&L.length)PAGES=L.filter(function(p){return p&&p.id;});
+    var want=(location.search.match(/[?&]page=([^&]+)/)||[])[1];want=want?decodeURIComponent(want):null;
+    var saved=null;try{saved=localStorage.getItem('toma.page');}catch(e){}
+    var ok=function(x){return x&&PAGES.some(function(p){return p.id===x;});};
+    openPage(ok(want)?want:ok(saved)?saved:PAGES[0].id);
+  });
+}
+startApp();
 })();
 </script>
 </body>
