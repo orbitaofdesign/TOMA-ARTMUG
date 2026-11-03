@@ -64,10 +64,9 @@ section{padding:72px 24px 0;text-align:center}
 
 /* 작업 순서 */
 .steps{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 8px}
-.step{font-size:22px;line-height:32px;background:#fff;border:3px solid var(--pink2);text-align:center;border-radius:999px;padding:12px 22px;transition:transform .25s cubic-bezier(.3,1.6,.5,1),background .2s,color .2s;animation:hop 3s ease-in-out infinite}
-.step:hover{background:var(--red);border-color:var(--red);color:#fff;transform:translateY(-6px);animation-play-state:paused}
+.step{font-size:22px;line-height:32px;background:#fff;border:3px solid var(--pink2);text-align:center;border-radius:999px;padding:12px 22px;transition:transform .25s cubic-bezier(.3,1.6,.5,1),background .2s,color .2s}
+.step:hover{background:var(--red);border-color:var(--red);color:#fff;transform:translateY(-6px)}
 .arrow{width:30px;height:16px;flex:none}
-@keyframes hop{0%,20%,100%{transform:translateY(0)}10%{transform:translateY(-8px)}}
 
 /* 사용 범위 */
 .use{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto}
