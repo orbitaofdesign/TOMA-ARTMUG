@@ -73,7 +73,7 @@ section{padding:72px 24px 0;text-align:center}
 /* 사용 범위 */
 .use{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto}
 .use .card{padding:28px 24px;text-align:center}
-.tag{display:inline-block;font-weight:800;font-size:26px;line-height:44px;color:#fff;background:var(--red);border-radius:999px;padding:0 22px;margin-bottom:12px}
+.tag{display:inline-block;font-weight:700;font-size:26px;line-height:44px;color:#fff;background:var(--red);border-radius:999px;padding:0 22px;margin-bottom:12px}
 .use p{font-size:18px;line-height:30px}
 .use small{display:block;font-size:15px;line-height:24px;color:var(--sub);margin-top:4px}
 
@@ -209,13 +209,13 @@ section{padding:72px 24px 0;text-align:center}
     </div>
     <div class="form rise">
       <ol id="formList">
-        <li><div>활동명 ( 한글 / 일본어 / 영어 ) ㅣ 방송 플랫폼 링크</div></li>
-        <li><div>신청하시는 품목 ㅣ 수량</div></li>
-        <li><div>버츄얼, 캐릭터 이미지 / 컨셉 등등..</div></li>
-        <li><div>원하는 컨셉 / 색상 / 구도 참고 이미지 등등..<small>( 오마카세 작업 가능하나, 기초적인 컨셉은 잡아주셔야합니다. ex ) 고양이, 문어 )</small></div></li>
-        <li><div>원하시는 마감 날짜 ( 안내드린 시작일 기준 5일 )</div></li>
-        <li><div>작업물 공개 가능 날짜 ( 비공개시 추가금 O )</div></li>
-        <li><div>기타</div></li>
+        <li><div>활동명 ( 한글 / 일본어 / 영어 ) ㅣ 방송 플랫폼 링크 :</div></li>
+        <li><div>신청하시는 품목 ㅣ 수량 :</div></li>
+        <li><div>버츄얼, 캐릭터 이미지 / 컨셉 등</div></li>
+        <li><div>원하는 컨셉 / 색상 / 구도 참고 이미지 등</div></li>
+        <li><div>원하시는 마감 날짜 (안내 드린 시작일 기준 5일) :</div></li>
+        <li><div>작업물 공개 가능 날짜 (비공개 시 추가금O) :</div></li>
+        <li><div>기타 :</div></li>
       </ol>
       <button class="copy" id="copyBtn" type="button">양식 복사하기 🍅</button>
     </div>
@@ -274,7 +274,7 @@ section{padding:72px 24px 0;text-align:center}
   // 양식 복사
   var btn=document.getElementById('copyBtn'),toast=document.getElementById('toast');
   btn.addEventListener('click',function(){
-    var lines=[].slice.call(document.querySelectorAll('#formList li')).map(function(li,i){var t=li.querySelector('div').childNodes[0].textContent.trim();return (i+1)+'. '+t+' : ';});
+    var lines=[].slice.call(document.querySelectorAll('#formList li')).map(function(li,i){return (i+1)+'. '+li.querySelector('div').textContent.trim()+' ';});
     var txt='[ 신청양식 ]\n'+lines.join('\n\n');
     function ok(){btn.classList.add('done');btn.textContent='복사 완료! ✔';place(toast,true);toast.classList.add('on');setTimeout(function(){btn.classList.remove('done');btn.textContent='양식 복사하기 🍅';toast.classList.remove('on');},2200);}
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(ok,fallback);}else fallback();
