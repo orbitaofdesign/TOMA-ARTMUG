@@ -1,0 +1,69 @@
+{
+ "v": 1,
+ "rev": 1794082631170,
+ "texts": {
+  "form.6": "원하시는 마감 날짜&nbsp; :"
+ },
+ "links": {},
+ "pf": {
+  "sample": [
+   {
+    "src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17930608230_Re.jpg",
+    "orig": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17930608230_Re.jpg",
+    "w": 1180,
+    "h": 236
+   },
+   {
+    "src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17925245480_Re.jpg",
+    "orig": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17925245480_Re.jpg",
+    "w": 1180,
+    "h": 337
+   },
+   {
+    "src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17923350190_Re.jpg",
+    "orig": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17923350190_Re.jpg",
+    "w": 1180,
+    "h": 2364
+   }
+  ],
+  "ref": [
+   {
+    "src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428521_Re.jpg",
+    "orig": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428521_Re.jpg",
+    "w": 1180,
+    "h": 510
+   },
+   {
+    "src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428532_Re.jpg",
+    "orig": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428532_Re.jpg",
+    "w": 1180,
+    "h": 441
+   },
+   {
+    "src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428533_Re.jpg",
+    "orig": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428533_Re.jpg",
+    "w": 1180,
+    "h": 465
+   },
+   {
+    "src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428534_Re.jpg",
+    "orig": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17827428534_Re.jpg",
+    "w": 1180,
+    "h": 460
+   },
+   {
+    "src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17851230140_Re.jpg",
+    "orig": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17851230140_Re.jpg",
+    "w": 1180,
+    "h": 449
+   },
+   {
+    "src": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17851230141_Re.jpg",
+    "orig": "https://artmugfile5.cafe24.com/image/up_img/detail/5/goods_59430/17851230141_Re.jpg",
+    "w": 1180,
+    "h": 456
+   }
+  ]
+ },
+ "imgs": {}
+}
