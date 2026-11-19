@@ -1,6 +1,6 @@
 {
  "v": 1,
- "rev": 1795074959509,
+ "rev": 1795074993090,
  "texts": {
   "sample.4": "썸네일 및 영상소스",
   "sample.2": "구독뱃지 / 구독티콘&nbsp;",
@@ -9,12 +9,6 @@
  "links": {},
  "pf": {
   "badge": [
-   {
-    "src": "portfolio/illust-sd/badge/20261109-200926-1ylh.webp",
-    "orig": "portfolio/illust-sd/badge/20261109-200926-1ylh_orig.jpg",
-    "w": 1600,
-    "h": 961
-   },
    {
     "src": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17860259260_Re.jpg",
     "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17860259260_Re.jpg",
@@ -30,18 +24,6 @@
    {
     "src": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17849037540_Re.jpg",
     "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17849037540_Re.jpg",
-    "w": 1180,
-    "h": 746
-   },
-   {
-    "src": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17849037541_Re.jpg",
-    "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17849037541_Re.jpg",
-    "w": 1180,
-    "h": 746
-   },
-   {
-    "src": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17857399110_Re.jpg",
-    "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17857399110_Re.jpg",
     "w": 1180,
     "h": 746
    }
@@ -64,6 +46,24 @@
     "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17857403331_Re.jpg",
     "w": 1180,
     "h": 746
+   },
+   {
+    "src": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17849037541_Re.jpg",
+    "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17849037541_Re.jpg",
+    "w": 1180,
+    "h": 746
+   },
+   {
+    "src": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17857399110_Re.jpg",
+    "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17857399110_Re.jpg",
+    "w": 1180,
+    "h": 746
+   },
+   {
+    "src": "portfolio/illust-sd/badge/20261109-200926-1ylh.webp",
+    "orig": "portfolio/illust-sd/badge/20261109-200926-1ylh_orig.jpg",
+    "w": 1600,
+    "h": 961
    }
   ],
   "video": [
