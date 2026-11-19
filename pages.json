@@ -10,5 +10,9 @@
  {
   "id": "illust-sd",
   "name": "SD 일러스트 (구독티콘·구독뱃지)"
+ },
+ {
+  "id": "youtube-thumbnail",
+  "name": "유튜브 썸네일"
  }
 ]
