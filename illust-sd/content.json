@@ -1,6 +1,6 @@
 {
  "v": 1,
- "rev": 1795070519977,
+ "rev": 1795070554879,
  "texts": {
   "sample.4": "썸네일 및 영상소스"
  },
@@ -70,6 +70,18 @@
     "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17858167100_Re.jpg",
     "w": 1180,
     "h": 636
+   },
+   {
+    "src": "portfolio/illust-sd/video/20261119-154228-2uxz.webp",
+    "orig": "portfolio/illust-sd/video/20261119-154228-2uxz_orig.jpg",
+    "w": 1600,
+    "h": 900
+   },
+   {
+    "src": "portfolio/illust-sd/video/20261119-154217-1y74.webp",
+    "orig": "portfolio/illust-sd/video/20261119-154217-1y74_orig.jpg",
+    "w": 1600,
+    "h": 900
    }
   ],
   "etc": [
