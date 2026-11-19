@@ -1,10 +1,10 @@
 {
  "v": 1,
- "rev": 1795074993090,
+ "rev": 1795075677183,
  "texts": {
   "sample.4": "썸네일 및 영상소스",
   "sample.2": "구독뱃지 / 구독티콘&nbsp;",
-  "sample.3": "치지직 패널 / 후원이미지"
+  "sample.5": "일러스트"
  },
  "links": {},
  "pf": {
@@ -46,24 +46,6 @@
     "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17857403331_Re.jpg",
     "w": 1180,
     "h": 746
-   },
-   {
-    "src": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17849037541_Re.jpg",
-    "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17849037541_Re.jpg",
-    "w": 1180,
-    "h": 746
-   },
-   {
-    "src": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17857399110_Re.jpg",
-    "orig": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17857399110_Re.jpg",
-    "w": 1180,
-    "h": 746
-   },
-   {
-    "src": "portfolio/illust-sd/badge/20261109-200926-1ylh.webp",
-    "orig": "portfolio/illust-sd/badge/20261109-200926-1ylh_orig.jpg",
-    "w": 1600,
-    "h": 961
    }
   ],
   "video": [
@@ -104,6 +86,12 @@
     "orig": "portfolio/illust-sd/etc/20261119-154419-3r64_orig.png",
     "w": 1600,
     "h": 818
+   },
+   {
+    "src": "portfolio/illust-sd/badge/20261109-200926-1ylh.webp",
+    "orig": "portfolio/illust-sd/badge/20261109-200926-1ylh_orig.jpg",
+    "w": 1600,
+    "h": 961
    },
    {
     "src": "https://artmugfile3.cafe24.com/image/up_img/detail/5/goods_57902/17925108720_Re.jpg",
