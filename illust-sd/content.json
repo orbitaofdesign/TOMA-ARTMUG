@@ -1,6 +1,6 @@
 {
  "v": 1,
- "rev": 1795072916323,
+ "rev": 1795072932796,
  "texts": {
   "sample.4": "썸네일 및 영상소스"
  },
@@ -78,20 +78,14 @@
     "h": 900
    },
    {
-    "src": "portfolio/illust-sd/video/20261119-162143-40rz.webp",
-    "orig": "portfolio/illust-sd/video/20261119-162143-40rz_orig.png",
+    "src": "portfolio/illust-sd/video/20261119-161914-2ggg.webp",
+    "orig": "portfolio/illust-sd/video/20261119-161914-2ggg_orig.png",
     "w": 1600,
     "h": 900
    },
    {
     "src": "portfolio/illust-sd/video/20261119-154217-1y74.webp",
     "orig": "portfolio/illust-sd/video/20261119-154217-1y74_orig.jpg",
-    "w": 1600,
-    "h": 900
-   },
-   {
-    "src": "portfolio/illust-sd/video/20261119-161914-2ggg.webp",
-    "orig": "portfolio/illust-sd/video/20261119-161914-2ggg_orig.png",
     "w": 1600,
     "h": 900
    },
